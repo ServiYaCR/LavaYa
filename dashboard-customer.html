@@ -6,7 +6,7 @@
 <title>Mis pedidos · ServiYa</title>
 <link rel="stylesheet" href="css/styles.css">
 <style>
-  .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 32px 20px; }
+  .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 20px 20px 32px; }
   .order-row{
     display:flex; justify-content:space-between; align-items:center;
     padding: 16px 18px; border: 1px solid var(--color-border);
@@ -19,6 +19,10 @@
 </style>
 </head>
 <body>
+  <div class="topnav">
+    <span></span>
+    <a href="#" class="logout-link" onclick="logout(); return false;">Cerrar sesión</a>
+  </div>
   <div class="orders-wrap">
     <h1 class="title">Mis pedidos</h1>
     <a href="order-new.html" class="btn btn-primary" style="margin-bottom:24px;">+ Nuevo pedido</a>
@@ -28,6 +32,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/order-status-labels.js"></script>
+  <script src="js/logout.js"></script>
   <script>
     (async () => {
       const { data: { user } } = await db.auth.getUser();

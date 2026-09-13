@@ -1,15 +1,26 @@
 async function loadAvailableOrders() {
-  const { data: { user } } = await db.auth.getUser();
-  if (!user) { window.location.href = '../signup.html'; return; }
+  const ok = await requireApprovedProvider();
+  if (!ok) return;
 
-  const { data: orders, error } = await db
-    .from('orders')
-    .select('*')
-    .eq('status', 'placed')
-    .is('provider_id', null)
-    .order('created_at', { ascending: true });
+  const { data: { user } } = await db.auth.getUser();
+
+  const { data: providerProfile } = await db
+    .from('provider_profiles')
+    .select('latitude, longitude')
+    .eq('id', user.id)
+    .single();
 
   const list = document.getElementById('orders-list');
+
+  if (!providerProfile || !providerProfile.latitude) {
+    list.innerHTML = '<p class="error-text" style="display:block;">No se encontró tu ubicación registrada.</p>';
+    return;
+  }
+
+  const { data: orders, error } = await db.rpc('get_available_orders_with_distance', {
+    provider_lat: providerProfile.latitude,
+    provider_lng: providerProfile.longitude
+  });
 
   if (error) {
     list.innerHTML = `<p class="error-text" style="display:block;">${error.message}</p>`;
@@ -39,6 +50,7 @@ async function loadAvailableOrders() {
           </div>
           <div class="payout">${formatColones(providerPayout)}</div>
         </div>
+        <div class="order-meta">📍 ${o.canton}, ${o.province} · ${o.distance_km} km de ti</div>
         <div class="order-meta">${windowLabels[o.pickup_window] || o.pickup_window}</div>
         ${o.special_instructions ? `<div class="order-meta">"${o.special_instructions}"</div>` : ''}
         <button class="btn btn-primary accept-btn" onclick="acceptOrder('${o.id}')">Aceptar pedido</button>

@@ -12,6 +12,9 @@ function getOrderIdFromUrl() {
 }
 
 async function loadOrder() {
+  const ok = await requireApprovedProvider();
+  if (!ok) return;
+
   const orderId = getOrderIdFromUrl();
   const card = document.getElementById('order-card');
 
@@ -27,10 +30,20 @@ async function loadOrder() {
     return;
   }
 
-  renderOrder(order);
+  let customerProfile = null;
+  if (order.provider_id) {
+    const { data: cp } = await db
+      .from('customer_profiles')
+      .select('province, canton, address_notes, access_type, latitude, longitude')
+      .eq('id', order.customer_id)
+      .single();
+    customerProfile = cp;
+  }
+
+  renderOrder(order, customerProfile);
 }
 
-function renderOrder(order) {
+function renderOrder(order, customerProfile) {
   const card = document.getElementById('order-card');
   const windowLabels = { normal: 'Horario normal', early: 'Madrugada', night: 'Noche' };
 
@@ -45,12 +58,30 @@ function renderOrder(order) {
   const isFinalStep = order.status === 'delivered' || order.status === 'cancelled';
   const actionLabel = NEXT_ACTION_LABEL[order.status];
 
+  const accessTypeLabels = {
+    condominio_seguridad: 'Condominio con guarda / seguridad',
+    casa_independiente: 'Casa independiente',
+    otro: 'Otro'
+  };
+
+  const pickupAddressHtml = customerProfile ? `
+    <div class="card" style="margin: 16px 0; background: var(--color-bg-soft); border:none;">
+      <p class="section-label" style="margin-top:0;">Dirección de recogida</p>
+      <p class="hint">${customerProfile.canton}, ${customerProfile.province}</p>
+      <p class="hint">${customerProfile.address_notes}</p>
+      <p class="hint">Acceso: ${accessTypeLabels[customerProfile.access_type] || customerProfile.access_type}</p>
+      ${customerProfile.latitude ? `<a href="https://www.google.com/maps?q=${customerProfile.latitude},${customerProfile.longitude}" target="_blank" class="btn btn-outline" style="margin-top:8px;">Abrir en Google Maps</a>` : ''}
+    </div>
+  ` : '';
+
   card.innerHTML = `
     <h1 class="title">Pedido</h1>
     <p class="section-label" style="margin-top:0;">${ORDER_STATUS_LABELS[order.status] || order.status}</p>
     <p class="hint">${order.estimated_weight_kg || '?'} kg estimado · ${order.express ? 'Express' : 'Estándar'} · ${windowLabels[order.pickup_window] || ''}</p>
     ${order.special_instructions ? `<p class="hint">Instrucciones: "${order.special_instructions}"</p>` : ''}
     ${order.final_weight_kg ? `<p class="hint">Peso confirmado: ${order.final_weight_kg} kg · Monto final: ${formatColones(order.price_colones)}</p>` : ''}
+
+    ${pickupAddressHtml}
 
     ${weightInputHtml}
 

@@ -241,3 +241,22 @@ textarea{ resize: vertical; min-height: 88px; }
   border: 1px solid var(--color-border);
   margin-top: 6px;
 }
+
+.topnav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 16px 20px 0;
+}
+.topnav a{
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  text-decoration: none;
+}
+.topnav .logout-link{
+  color: var(--color-text-muted);
+  font-weight: 500;
+}

@@ -7,8 +7,8 @@
 //   - Secret key（sb_secret_... 旧 service_role key）は絶対にここに
 //     貼らないこと。フロントに置くとDBを誰でも操作できてしまいます
 // ============================================================
-const SUPABASE_URL = "https://ptzbrseoczzdmuxwwxed.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_FIek865NVZyeUFtOg4RHog_34yiZbXL";
+const SUPABASE_URL = "https://YOUR-PROJECT-REF.supabase.co";
+const SUPABASE_ANON_KEY = "YOUR-PUBLISHABLE-KEY";
 
 // CDN経由でSupabase JSライブラリを読み込んで使う（ビルド不要）
 const { createClient } = supabase;

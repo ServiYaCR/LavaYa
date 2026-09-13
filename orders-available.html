@@ -20,6 +20,10 @@
 </style>
 </head>
 <body>
+  <div class="topnav">
+    <a href="dashboard-provider.html">← Mis trabajos</a>
+    <a href="#" class="logout-link" onclick="logout(); return false;">Cerrar sesión</a>
+  </div>
   <div class="orders-wrap">
     <h1 class="title">Pedidos disponibles</h1>
     <p class="subtitle">Acepta los pedidos que quieras atender. El monto final se ajusta con el peso real.</p>
@@ -30,6 +34,7 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/pricing.js"></script>
   <script src="js/require-approved-provider.js"></script>
+  <script src="js/logout.js"></script>
   <script src="js/orders-available.js"></script>
 </body>
 </html>

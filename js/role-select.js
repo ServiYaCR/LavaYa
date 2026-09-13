@@ -24,3 +24,27 @@ async function setRole(role) {
 
 document.getElementById('role-customer').addEventListener('click', () => setRole('customer'));
 document.getElementById('role-provider').addEventListener('click', () => setRole('provider'));
+
+// 既に役割が決まっている人(Googleログインで戻ってきた既存ユーザーなど)は
+// 選択画面を出さず、そのままダッシュボードへ自動的に振り分ける
+(async () => {
+  const { data: { user } } = await db.auth.getUser();
+  if (!user) return;
+
+  const { data: profile } = await db.from('profiles').select('role').eq('id', user.id).single();
+  if (profile && profile.role === 'customer') {
+    window.location.href = 'dashboard-customer.html';
+  } else if (profile && profile.role === 'provider') {
+    const { data: providerProfile } = await db
+      .from('provider_profiles')
+      .select('status')
+      .eq('id', user.id)
+      .single();
+
+    if (!providerProfile || providerProfile.status !== 'approved') {
+      window.location.href = 'pending-review.html';
+    } else {
+      window.location.href = 'dashboard-provider.html';
+    }
+  }
+})();
