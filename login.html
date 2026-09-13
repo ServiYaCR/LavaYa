@@ -18,6 +18,12 @@
         <button type="submit" class="btn btn-primary">Iniciar sesión</button>
         <p class="error-text" id="error-text"></p>
       </form>
+
+      <div class="divider">o</div>
+      <button id="google-login" class="btn-google btn">
+        Continuar con Google
+      </button>
+
       <p class="footnote">¿No tienes cuenta? <a href="signup.html">Crear cuenta</a></p>
     </div>
   </div>
@@ -51,6 +57,14 @@
       } else {
         window.location.href = 'dashboard-provider.html';
       }
+    });
+  </script>
+  <script>
+    document.getElementById('google-login').addEventListener('click', async () => {
+      await db.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/role-select.html' }
+      });
     });
   </script>
 </body>
