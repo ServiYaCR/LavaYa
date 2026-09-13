@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedidos disponibles · ServiYa</title>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 32px 20px; }
+  .order-row{
+    padding: 16px 18px; border: 1px solid var(--color-border);
+    border-radius: var(--radius-card); background: var(--color-bg);
+    margin-bottom: 12px;
+  }
+  .order-top{ display:flex; justify-content:space-between; align-items:center; }
+  .order-meta{ font-size:0.85rem; color: var(--color-text-muted); margin-top:4px; }
+  .payout{ font-family: var(--font-display); font-weight:600; color: var(--color-primary-dark); }
+  .empty-state{ text-align:center; color: var(--color-text-muted); padding: 40px 0; }
+  .accept-btn{ margin-top:12px; }
+</style>
+</head>
+<body>
+  <div class="orders-wrap">
+    <h1 class="title">Pedidos disponibles</h1>
+    <p class="subtitle">Acepta los pedidos que quieras atender. El monto final se ajusta con el peso real.</p>
+    <div id="orders-list"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/pricing.js"></script>
+  <script src="js/orders-available.js"></script>
+</body>
+</html>

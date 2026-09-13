@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nuevo pedido · ServiYa</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="card">
+      <h1 class="title">Nuevo pedido</h1>
+      <p class="subtitle">Prepara tu bolsa antes de que llegue tu Lavandero/a.</p>
+
+      <form id="order-form">
+        <p class="section-label">Tu ropa</p>
+        <label for="estimated_weight">Peso aproximado (kg)</label>
+        <input type="number" id="estimated_weight" min="1" step="0.5" required placeholder="Ej. 5">
+        <p class="hint">Es solo un estimado. El monto final se calcula con el peso real después del lavado.</p>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="has_hang_dry">
+          <label for="has_hang_dry">Tengo prendas para secar en gancho (aparte, en bolsa separada)</label>
+        </div>
+        <div id="hangers-field" style="display:none;">
+          <label for="hangers_count">Cantidad de ganchos</label>
+          <input type="number" id="hangers_count" min="1" value="5">
+        </div>
+
+        <p class="section-label">Velocidad</p>
+        <select id="express" required>
+          <option value="false">Estándar (entrega al día siguiente)</option>
+          <option value="true">Express (entrega el mismo día)</option>
+        </select>
+
+        <p class="section-label">Horario de recogida y entrega</p>
+        <select id="pickup_window" required>
+          <option value="normal">Horario normal (8:00 - 19:00)</option>
+          <option value="early">Madrugada (5:00 - 8:00) — recargo ₡1,500</option>
+          <option value="night">Noche (19:00 - 21:00) — recargo ₡1,500</option>
+        </select>
+
+        <p class="section-label">Notas</p>
+        <label for="special_instructions">Instrucciones especiales (opcional)</label>
+        <textarea id="special_instructions" placeholder="Ej. Detergente hipoalergénico, no usar suavizante, etc."></textarea>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="confirm_clean" required>
+          <label for="confirm_clean">Confirmo que mi ropa no tiene chinches, pulgas, ni materiales biológicos peligrosos.</label>
+        </div>
+
+        <div class="card" style="margin-top:22px; background: var(--color-bg-soft); border: none;">
+          <p style="margin:0; font-size:0.85rem; color: var(--color-text-muted);">Estimado (sujeto a cambio según peso real)</p>
+          <p id="price-preview" style="margin:4px 0 0; font-family: var(--font-display); font-size:1.6rem; color: var(--color-primary-dark);">₡0</p>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Confirmar pedido</button>
+        <p class="error-text" id="error-text"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/pricing.js"></script>
+  <script src="js/order-new.js"></script>
+</body>
+</html>

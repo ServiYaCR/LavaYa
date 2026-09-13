@@ -3,15 +3,66 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi cuenta · ServiYa</title>
+<title>Mis pedidos · ServiYa</title>
 <link rel="stylesheet" href="css/styles.css">
+<style>
+  .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 32px 20px; }
+  .order-row{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 16px 18px; border: 1px solid var(--color-border);
+    border-radius: var(--radius-card); background: var(--color-bg);
+    margin-bottom: 12px; text-decoration:none; color: inherit;
+  }
+  .order-status{ font-size:0.78rem; font-weight:600; color: var(--color-primary); text-transform:uppercase; }
+  .order-meta{ font-size:0.85rem; color: var(--color-text-muted); margin-top:2px; }
+  .empty-state{ text-align:center; color: var(--color-text-muted); padding: 40px 0; }
+</style>
 </head>
 <body>
-  <div class="screen">
-    <div class="card">
-      <h1 class="title">Bienvenido/a, Lavandero/a</h1>
-      <p class="subtitle">La pantalla para ver y aceptar pedidos cercanos se agrega en la Fase 2.</p>
-    </div>
+  <div class="orders-wrap">
+    <h1 class="title">Mis pedidos</h1>
+    <a href="orders-available.html" class="btn btn-primary" style="margin-bottom:24px;">Ver pedidos disponibles</a>
+    <div id="orders-list"></div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/order-status-labels.js"></script>
+  <script>
+    (async () => {
+      const { data: { user } } = await db.auth.getUser();
+      if (!user) { window.location.href = 'signup.html'; return; }
+
+      const { data: orders, error } = await db
+        .from('orders')
+        .select('*')
+        .eq('provider_id', user.id)
+        .order('created_at', { ascending: false });
+
+      const list = document.getElementById('orders-list');
+
+      if (error) {
+        list.innerHTML = `<p class="error-text" style="display:block;">${error.message}</p>`;
+        return;
+      }
+
+      if (!orders || orders.length === 0) {
+        list.innerHTML = '<div class="empty-state">Todavía no tienes pedidos activos.</div>';
+        return;
+      }
+
+      list.innerHTML = orders.map(o => `
+        <a class="order-row" href="order-manage.html?id=${o.id}">
+          <div>
+            <div class="order-status">${ORDER_STATUS_LABELS[o.status] || o.status}</div>
+            <div class="order-meta">${o.final_weight_kg || o.estimated_weight_kg || '?'} kg · ${o.express ? 'Express' : 'Estándar'}</div>
+          </div>
+          <div style="font-family: var(--font-display); font-weight:600;">
+            ${o.price_colones ? '₡' + Math.round(o.price_colones).toLocaleString('es-CR') : '—'}
+          </div>
+        </a>
+      `).join('');
+    })();
+  </script>
 </body>
 </html>
