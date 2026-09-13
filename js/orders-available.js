@@ -17,6 +17,14 @@ async function loadAvailableOrders() {
     return;
   }
 
+  const { count: activeCount } = await db
+    .from('orders')
+    .select('id', { count: 'exact', head: true })
+    .eq('provider_id', user.id)
+    .in('status', ['awaiting_pickup', 'picked_up', 'washing', 'ready_for_delivery']);
+
+  const atLimit = (activeCount || 0) >= MAX_ACTIVE_JOBS;
+
   const { data: orders, error } = await db.rpc('get_available_orders_with_distance', {
     provider_lat: providerProfile.latitude,
     provider_lng: providerProfile.longitude
@@ -24,6 +32,11 @@ async function loadAvailableOrders() {
 
   if (error) {
     list.innerHTML = `<p class="error-text" style="display:block;">${error.message}</p>`;
+    return;
+  }
+
+  if (atLimit) {
+    list.innerHTML = `<div class="empty-state">Ya tienes ${MAX_ACTIVE_JOBS} trabajos activos, el máximo permitido. Termina uno para aceptar más.</div>`;
     return;
   }
 

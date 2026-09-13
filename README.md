@@ -3,13 +3,22 @@
 Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 まで完成しています。
 以下の手順通りに画面操作するだけで、実際に動くWebアプリになります。
 
+## データベースのSQLファイルについて(重要)
+
+このプロジェクトのSupabase用SQLファイルは2種類に分かれます:
+
+- **`supabase/schema.sql`** — 最初の1回だけ実行するファイル。テーブルを新規作成します。**2回目以降は絶対に再実行しないでください**(エラーになります)。
+- **`supabase/migration_00X_〇〇.sql`** — フェーズが進むたびに追加されるファイル。既存のテーブルに列やルールを**追加**するだけのファイルです。`schema.sql`は変更せず、そのまま新しいクエリとして貼って実行してください。
+
+つまり実行するSQLは**毎回置き換えるのではなく、フェーズが増えるたびに1つずつ追加で実行していく**イメージです。番号順(001, 002, 003…)に実行してください。
+
 ## ステップ1: Supabaseプロジェクトを作る
 
 1. https://supabase.com にアクセスし、アカウント作成 → 「New Project」
 2. プロジェクト名は `serviya` などお好きな名前で作成(リージョンは `us-east` 系が中南米から近くおすすめ)
 3. 作成が終わったら、左メニューの **SQL Editor** を開く
 4. このプロジェクト内の `supabase/schema.sql` の中身を全部コピーして貼り付け、「Run」を押す
-   → これでデータベースの表(profiles, orders など)が全部できます
+   → これでデータベースの表(profiles, orders など)が全部できます(これが唯一の初回セットアップ用ファイルです)
 
 ## ステップ2: 画像アップロード用のStorageバケットを作る
 
@@ -25,9 +34,10 @@ Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 ま
 
 ## ステップ4: APIキーをコードに貼る
 
-1. 左メニューの **Project Settings > API**
-2. `Project URL` と `anon public key` をコピー
-3. `js/supabase-client.js` を開き、`YOUR-PROJECT-REF` と `YOUR-ANON-PUBLIC-KEY` の部分を書き換えて保存
+1. 左メニューの **Project Settings > API Keys**
+2. `Project URL` と `Publishable key`(`sb_publishable_...`、旧称 anon key)をコピー
+   ※ `Secret key`(旧 service_role key)は絶対にコピーしない・使わないでください。これはサーバー専用の管理者キーで、フロント用のこのコードに含めるとデータベースを誰でも操作できる状態になります
+3. `js/supabase-client.js` を開き、`YOUR-PROJECT-REF` と `YOUR-PUBLISHABLE-KEY` の部分を書き換えて保存
 
 ## ステップ5: GitHubにアップロード
 
@@ -55,9 +65,29 @@ Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 ま
 3. 「Busco servicio de lavandería」→ 顧客登録フォーム(位置情報・州/郡・señas particulares・支払い方法)
 4. 「Quiero lavar y ganar」→ プロバイダー登録フォーム(cédula・顔写真・cédula写真・SINPE番号)
 
+## Phase 2を反映する手順
+
+1. Supabaseダッシュボード → **SQL Editor**
+2. `supabase/migration_002_phase2.sql` の中身を全部コピーして貼り付け、「Run」を押す
+   (`schema.sql`は変更していないので、再実行の必要はありません。これは追加分だけです)
+3. 続けて `supabase/migration_003_fix_claim_policy.sql` も同様に実行してください(注文受諾時のバグ修正)
+4. 続けて `supabase/migration_004_storage_policy.sql` も同様に実行してください(プロバイダー登録時の写真アップロード許可)
+5. 続けて `supabase/migration_005_distance_and_pickup_address.sql` も同様に実行してください(受付一覧の距離表示・受諾後の集荷先住所閲覧)
+6. 続けて `supabase/migration_006_provider_job_limit.sql` も同様に実行してください(プロバイダー1人あたりの同時受注上限)
+7. GitHubに新しいファイル一式(`order-new.html`, `orders-available.html`, `order-manage.html`, `js/pricing.js`, `js/order-new.js`, `js/orders-available.js`, `js/order-manage.js`, `js/order-status-labels.js`)と、更新した`dashboard-customer.html`・`dashboard-provider.html`・`README.md`をアップロード
+8. Cloudflareが自動で再デプロイ(数十秒〜1分)
+
+## 料金ロジック(js/pricing.js)
+
+- 標準: ₡1,300/kg + 集配₡1,000、最低₡6,500
+- Express: ₡2,200/kg + 集配₡1,000、最低₡9,500
+- 早朝(5-8時)・夜間(19-21時): +₡1,500
+- 運営手数料: 15%
+
+金額を変えたい場合は`js/pricing.js`の`PRICING`定数だけ書き換えればOKです。
+
 ## まだ実装していない部分(次のフェーズ)
 
-- 注文作成〜マッチング〜重量確定〜配達までのフロー(Phase 2)
 - cédulaのTSE自動照合(Didit/Verifikなど有料APIとの連携。現状は運営が手動でprovider_profiles.statusを`approved`に変更する運用)
 - 地図上でピンをドラッグして住所を指定するUI(現状はGPS自動取得のみ。Google Maps/Mapbox APIキー取得後に追加可能)
 - 決済(カードのオンライン決済、SINPE Móvilの実際の入金確認フロー)
