@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mis pedidos · ServiYa</title>
+<title>Mis trabajos · ServiYa</title>
 <link rel="stylesheet" href="css/styles.css">
 <style>
-  .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 32px 20px; }
+  .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 20px 20px 32px; }
   .order-row{
     display:flex; justify-content:space-between; align-items:center;
     padding: 16px 18px; border: 1px solid var(--color-border);
@@ -19,8 +19,13 @@
 </style>
 </head>
 <body>
+  <div class="topnav">
+    <span></span>
+    <a href="#" class="logout-link" onclick="logout(); return false;">Cerrar sesión</a>
+  </div>
   <div class="orders-wrap">
-    <h1 class="title">Mis pedidos</h1>
+    <h1 class="title">Mis trabajos</h1>
+    <p class="hint" id="logged-in-as" style="margin-bottom:16px;"></p>
     <a href="orders-available.html" class="btn btn-primary" style="margin-bottom:24px;">Ver pedidos disponibles</a>
     <div id="orders-list"></div>
   </div>
@@ -29,12 +34,14 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/order-status-labels.js"></script>
   <script src="js/require-approved-provider.js"></script>
+  <script src="js/logout.js"></script>
   <script>
     (async () => {
       const ok = await requireApprovedProvider();
       if (!ok) return;
 
       const { data: { user } } = await db.auth.getUser();
+      document.getElementById('logged-in-as').textContent = `Conectado como: ${user.email} (${user.id})`;
 
       const { data: orders, error } = await db
         .from('orders')
@@ -50,7 +57,7 @@
       }
 
       if (!orders || orders.length === 0) {
-        list.innerHTML = '<div class="empty-state">Todavía no tienes pedidos activos.</div>';
+        list.innerHTML = '<div class="empty-state">Todavía no tienes trabajos activos.</div>';
         return;
       }
 
