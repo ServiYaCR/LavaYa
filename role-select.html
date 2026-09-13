@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cómo quieres usar ServiYa?</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="card">
+      <h1 class="title">¿Cómo quieres usar ServiYa?</h1>
+      <p class="subtitle">Puedes cambiar esto más adelante contactando a soporte.</p>
+
+      <div class="role-options">
+        <button class="role-card" id="role-customer">
+          <span class="role-icon">🧺</span>
+          <span>
+            <p class="role-title">Busco servicio de lavandería</p>
+            <p class="role-desc">Pide que recojan, laven y entreguen tu ropa.</p>
+          </span>
+        </button>
+
+        <button class="role-card" id="role-provider">
+          <span class="role-icon">💧</span>
+          <span>
+            <p class="role-title">Quiero lavar y ganar</p>
+            <p class="role-desc">Recibe pedidos cerca de ti y gana dinero lavando.</p>
+          </span>
+        </button>
+      </div>
+
+      <p class="error-text" id="error-text"></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/role-select.js"></script>
+</body>
+</html>

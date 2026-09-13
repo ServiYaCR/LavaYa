@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de cliente · ServiYa</title>
+<link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="card">
+      <h1 class="title">Completa tu perfil</h1>
+      <p class="subtitle">Esto ayuda a tu Lavandero/a a encontrarte y a que tu ropa vuelva en perfecto estado.</p>
+
+      <form id="customer-form">
+        <p class="section-label">Contacto</p>
+        <label for="phone">Número de WhatsApp</label>
+        <input type="tel" id="phone" required placeholder="8888-8888">
+
+        <p class="section-label">Ubicación de recogida</p>
+        <label for="coords">Pin GPS de tu casa</label>
+        <button type="button" id="use-location" class="btn btn-outline" style="margin-top:0;">📍 Usar mi ubicación actual</button>
+        <p class="hint" id="coords-display">Aún no se ha capturado tu ubicación.</p>
+        <input type="hidden" id="latitude">
+        <input type="hidden" id="longitude">
+
+        <label for="province">Provincia</label>
+        <select id="province" required></select>
+
+        <label for="canton">Cantón</label>
+        <select id="canton" required></select>
+
+        <label for="address_notes">Señas particulares</label>
+        <textarea id="address_notes" placeholder="Ej. Casa de dos pisos color verde, 75 metros oeste del AMPM" required></textarea>
+
+        <label for="access_type">Tipo de acceso</label>
+        <select id="access_type" required>
+          <option value="">Selecciona una opción</option>
+          <option value="condominio_seguridad">Condominio con guarda / seguridad</option>
+          <option value="casa_independiente">Casa independiente</option>
+          <option value="otro">Otro</option>
+        </select>
+
+        <p class="section-label">Pago</p>
+        <label for="payment_method">Método de pago preferido</label>
+        <select id="payment_method" required>
+          <option value="">Selecciona una opción</option>
+          <option value="card">Tarjeta de crédito/débito</option>
+          <option value="sinpe">SINPE Móvil</option>
+        </select>
+
+        <button type="submit" class="btn btn-primary">Terminar registro</button>
+        <p class="error-text" id="error-text"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="../js/cr-locations.js"></script>
+  <script src="../js/register-customer.js"></script>
+</body>
+</html>

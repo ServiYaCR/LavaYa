@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crear cuenta · ServiYa</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="card">
+      <h1 class="title">Crear tu cuenta</h1>
+      <p class="subtitle">Te tomará menos de un minuto.</p>
+
+      <form id="signup-form">
+        <label for="full_name">Nombre completo</label>
+        <input type="text" id="full_name" required placeholder="Ej. María Fernanda Solís">
+
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" required placeholder="tucorreo@ejemplo.com">
+
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" required minlength="8" placeholder="Mínimo 8 caracteres">
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="accept_privacy" required>
+          <label for="accept_privacy">Acepto la <a href="privacy-policy.html" target="_blank">Política de Privacidad</a> de ServiYa.</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Continuar</button>
+        <p class="error-text" id="error-text"></p>
+      </form>
+
+      <div class="divider">o</div>
+      <button id="google-signup" class="btn-google btn">
+        Continuar con Google
+      </button>
+
+      <p class="footnote">¿Ya tienes cuenta? <a href="login.html">Iniciar sesión</a></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>
