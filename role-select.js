@@ -35,6 +35,16 @@ document.getElementById('role-provider').addEventListener('click', () => setRole
   if (profile && profile.role === 'customer') {
     window.location.href = 'dashboard-customer.html';
   } else if (profile && profile.role === 'provider') {
-    window.location.href = 'dashboard-provider.html';
+    const { data: providerProfile } = await db
+      .from('provider_profiles')
+      .select('status')
+      .eq('id', user.id)
+      .single();
+
+    if (!providerProfile || providerProfile.status !== 'approved') {
+      window.location.href = 'pending-review.html';
+    } else {
+      window.location.href = 'dashboard-provider.html';
+    }
   }
 })();
