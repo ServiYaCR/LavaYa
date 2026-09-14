@@ -2,6 +2,32 @@ renderNav('provider', 'profile-provider.html');
 
 let currentUser = null;
 
+async function loadEarnings(userId) {
+  const { data: deliveredOrders, error } = await db
+    .from('orders')
+    .select('price_colones')
+    .eq('provider_id', userId)
+    .eq('status', 'delivered');
+
+  const totalEl = document.getElementById('earnings-total');
+  const detailEl = document.getElementById('earnings-detail');
+
+  if (error) {
+    detailEl.textContent = 'No se pudo cargar tus ganancias.';
+    return;
+  }
+
+  const jobCount = deliveredOrders.length;
+  const totalRevenue = deliveredOrders.reduce((sum, o) => sum + (o.price_colones || 0), 0);
+  const totalEarnings = deliveredOrders.reduce((sum, o) => {
+    const { providerPayout } = calculateProviderPayout(o.price_colones || 0);
+    return sum + providerPayout;
+  }, 0);
+
+  totalEl.textContent = formatColones(totalEarnings);
+  detailEl.textContent = `De ${jobCount} trabajo${jobCount === 1 ? '' : 's'} entregado${jobCount === 1 ? '' : 's'} (después de la comisión de ServiYa)`;
+}
+
 const STATUS_BADGE_LABELS = {
   pending_review: 'Estado: En revisión',
   approved: 'Estado: Aprobado',
@@ -13,6 +39,8 @@ async function loadProfile() {
   const { data: { user } } = await db.auth.getUser();
   if (!user) { window.location.href = 'signup.html'; return; }
   currentUser = user;
+
+  loadEarnings(user.id);
 
   const { data: profile } = await db
     .from('profiles')

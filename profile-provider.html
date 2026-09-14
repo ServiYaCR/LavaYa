@@ -10,11 +10,23 @@
   <div id="app-nav" class="app-nav"></div>
 
   <div class="screen" style="padding-top:20px;">
+    <div class="card" style="margin-bottom:16px;">
+      <p class="section-label" style="margin-top:0;">Mis ganancias</p>
+      <p id="earnings-total" style="font-family: var(--font-display); font-size:1.8rem; font-weight:700; color: var(--color-primary-dark); margin:0;">₡0</p>
+      <p class="hint" id="earnings-detail">Cargando...</p>
+    </div>
+
     <div class="card">
       <h1 class="title">Mi perfil</h1>
-      <a href="trabajos-historial.html" class="btn btn-outline" style="margin-top:0; margin-bottom:8px;">Ver historial completo de trabajos</a>
-      <a href="privacy-policy.html" class="btn btn-outline" style="margin-top:0; margin-bottom:20px;">Política de Privacidad</a>
+      <a href="trabajos-historial.html" class="btn btn-outline" style="margin-top:0; margin-bottom:20px;">Ver historial completo de trabajos</a>
       <p class="hint" id="status-badge" style="margin-bottom:20px;"></p>
+
+      <div class="card" style="background: var(--color-bg-soft); border:none; margin-bottom:24px;">
+        <p class="section-label" style="margin-top:0;">Mis ganancias</p>
+        <p class="hint">Trabajos completados: <strong id="earnings-count">—</strong></p>
+        <p class="hint">Ganado este mes: <strong id="earnings-month">—</strong></p>
+        <p class="hint">Ganado en total: <strong id="earnings-total">—</strong></p>
+      </div>
 
       <form id="profile-form">
         <p class="section-label" style="margin-top:0;">Contacto</p>
@@ -51,11 +63,14 @@
         <p class="hint" id="saved-msg" style="display:none; color: var(--color-success);">Guardado correctamente.</p>
         <p class="error-text" id="error-text"></p>
       </form>
+
+      <a href="privacy-policy.html" class="btn btn-outline">Política de Privacidad</a>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
+  <script src="js/pricing.js"></script>
   <script src="js/logout.js"></script>
   <script src="js/nav.js"></script>
   <script src="js/profile-provider.js"></script>
