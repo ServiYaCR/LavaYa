@@ -76,7 +76,7 @@ function renderOrder(order, customerProfile) {
 
   card.innerHTML = `
     <h1 class="title">Pedido</h1>
-    <p class="section-label" style="margin-top:0;">${ORDER_STATUS_LABELS[order.status] || order.status}</p>
+    <p class="section-label ${ORDER_STATUS_COLORS[order.status] || ''}" style="margin-top:0;">${ORDER_STATUS_LABELS[order.status] || order.status}</p>
     <p class="hint">${order.estimated_weight_kg || '?'} kg estimado · ${order.express ? 'Express' : 'Estándar'} · ${windowLabels[order.pickup_window] || ''}</p>
     ${order.special_instructions ? `<p class="hint">Instrucciones: "${order.special_instructions}"</p>` : ''}
     ${order.final_weight_kg ? `<p class="hint">Peso confirmado: ${order.final_weight_kg} kg · Monto final: ${formatColones(order.price_colones)}</p>` : ''}

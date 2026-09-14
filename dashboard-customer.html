@@ -19,10 +19,7 @@
 </style>
 </head>
 <body>
-  <div class="topnav">
-    <span></span>
-    <a href="#" class="logout-link" onclick="logout(); return false;">Cerrar sesión</a>
-  </div>
+  <div id="app-nav" class="app-nav"></div>
   <div class="orders-wrap">
     <h1 class="title">Mis pedidos</h1>
     <a href="order-new.html" class="btn btn-primary" style="margin-bottom:24px;">+ Nuevo pedido</a>
@@ -33,7 +30,10 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/order-status-labels.js"></script>
   <script src="js/logout.js"></script>
+  <script src="js/nav.js"></script>
   <script>
+    renderNav('customer', 'dashboard-customer.html');
+
     (async () => {
       const { data: { user } } = await db.auth.getUser();
       if (!user) { window.location.href = 'signup.html'; return; }
@@ -59,7 +59,7 @@
       list.innerHTML = orders.map(o => `
         <div class="order-row">
           <div>
-            <div class="order-status">${ORDER_STATUS_LABELS[o.status] || o.status}</div>
+            <div class="order-status ${ORDER_STATUS_COLORS[o.status] || ''}">${ORDER_STATUS_LABELS[o.status] || o.status}</div>
             <div class="order-meta">${o.estimated_weight_kg ? o.estimated_weight_kg + ' kg · ' : ''}${o.express ? 'Express' : 'Estándar'}</div>
           </div>
           <div style="text-align:right;">

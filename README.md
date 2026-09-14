@@ -74,8 +74,15 @@ Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 ま
 4. 続けて `supabase/migration_004_storage_policy.sql` も同様に実行してください(プロバイダー登録時の写真アップロード許可)
 5. 続けて `supabase/migration_005_distance_and_pickup_address.sql` も同様に実行してください(受付一覧の距離表示・受諾後の集荷先住所閲覧)
 6. 続けて `supabase/migration_006_provider_job_limit.sql` も同様に実行してください(プロバイダー1人あたりの同時受注上限)
-7. GitHubに新しいファイル一式(`order-new.html`, `orders-available.html`, `order-manage.html`, `js/pricing.js`, `js/order-new.js`, `js/orders-available.js`, `js/order-manage.js`, `js/order-status-labels.js`)と、更新した`dashboard-customer.html`・`dashboard-provider.html`・`README.md`をアップロード
-8. Cloudflareが自動で再デプロイ(数十秒〜1分)
+7. 続けて `supabase/migration_007_protect_provider_admin_fields.sql` も同様に実行してください(プロフィール編集画面を追加する前の安全対策)
+8. GitHubに新しいファイル一式(`order-new.html`, `orders-available.html`, `order-manage.html`, `profile-customer.html`, `profile-provider.html`, `js/`配下一式)と、更新した`dashboard-customer.html`・`dashboard-provider.html`・`README.md`をアップロード
+9. Cloudflareが自動で再デプロイ(数十秒〜1分)
+
+## Phase 2.3で追加したもの
+
+- **プロフィール画面**(`profile-customer.html` / `profile-provider.html`): 電話番号・住所・señas particulares・SINPE番号などを後から見返し・編集できます。プロバイダーのcédula・審査ステータス・評価は、本人が書き換えられないようDB側でも保護しています(悪意あるAPI直叩きも防止)
+- **プルダウンメニュー**(`js/nav.js`): 全ページ共通のナビゲーション。どのページからでも「ダッシュボード/新規注文またはプロバイダーは受付一覧/プロフィール/ログアウト」に飛べます
+- **注文ステータスの色分け**(`js/order-status-labels.js`の`ORDER_STATUS_COLORS`): 待機中=グレー、作業中=ティール、もうすぐ完了=オレンジ、完了=緑、問題あり=赤
 
 ## 料金ロジック(js/pricing.js)
 

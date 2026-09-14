@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi perfil · ServiYa</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app-nav" class="app-nav"></div>
+
+  <div class="screen" style="padding-top:20px;">
+    <div class="card">
+      <h1 class="title">Mi perfil</h1>
+      <p class="hint" id="status-badge" style="margin-bottom:20px;"></p>
+
+      <form id="profile-form">
+        <p class="section-label" style="margin-top:0;">Contacto</p>
+        <label for="full_name">Nombre completo</label>
+        <input type="text" id="full_name" required>
+
+        <label for="phone">Número de WhatsApp</label>
+        <input type="tel" id="phone" required>
+
+        <p class="section-label">Identidad</p>
+        <label>Número de cédula</label>
+        <input type="text" id="cedula" disabled>
+        <p class="hint">Para corregir tu cédula, contacta a soporte (no editable aquí por seguridad).</p>
+
+        <p class="section-label">Cobros</p>
+        <label for="sinpe_phone">Número para recibir pagos por SINPE Móvil</label>
+        <input type="tel" id="sinpe_phone" required>
+
+        <p class="section-label">Zona de trabajo</p>
+        <div class="checkbox-row">
+          <input type="checkbox" id="has_washer_dryer">
+          <label for="has_washer_dryer">Tengo lavadora y secadora en funcionamiento en mi casa.</label>
+        </div>
+
+        <label for="service_radius">Radio de servicio (km)</label>
+        <input type="number" id="service_radius" min="1" max="30">
+
+        <button type="button" id="use-location" class="btn btn-outline">📍 Actualizar mi ubicación actual</button>
+        <p class="hint" id="coords-display"></p>
+        <input type="hidden" id="latitude">
+        <input type="hidden" id="longitude">
+
+        <button type="submit" class="btn btn-primary">Guardar cambios</button>
+        <p class="hint" id="saved-msg" style="display:none; color: var(--color-success);">Guardado correctamente.</p>
+        <p class="error-text" id="error-text"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/logout.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/profile-provider.js"></script>
+</body>
+</html>

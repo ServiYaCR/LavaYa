@@ -7,10 +7,7 @@
 <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="topnav">
-    <a href="dashboard-provider.html">← Mis trabajos</a>
-    <span></span>
-  </div>
+  <div id="app-nav" class="app-nav"></div>
   <div class="screen">
     <div class="card" id="order-card">
       <p class="subtitle">Cargando pedido...</p>
@@ -22,6 +19,9 @@
   <script src="js/pricing.js"></script>
   <script src="js/order-status-labels.js"></script>
   <script src="js/require-approved-provider.js"></script>
+  <script src="js/logout.js"></script>
+  <script src="js/nav.js"></script>
+  <script>renderNav('provider', 'dashboard-provider.html');</script>
   <script src="js/order-manage.js"></script>
 </body>
 </html>
