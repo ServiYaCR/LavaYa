@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mis pedidos · ServiYa</title>
+<title>Historial de pedidos · ServiYa</title>
 <link rel="stylesheet" href="css/styles.css">
 <style>
   .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 20px 20px 32px; }
@@ -13,27 +13,26 @@
     border-radius: var(--radius-card); background: var(--color-bg);
     margin-bottom: 12px;
   }
-  .order-status{ font-size:0.78rem; font-weight:600; color: var(--color-primary); text-transform:uppercase; }
+  .order-status{ font-size:0.78rem; font-weight:600; text-transform:uppercase; }
   .order-meta{ font-size:0.85rem; color: var(--color-text-muted); margin-top:2px; }
   .empty-state{ text-align:center; color: var(--color-text-muted); padding: 40px 0; }
 </style>
 </head>
 <body>
-  <div id="app-nav" class="app-nav"></div>
+  <div class="topnav">
+    <a href="profile-customer.html">← Mi perfil</a>
+    <span></span>
+  </div>
   <div class="orders-wrap">
-    <h1 class="title">Mis pedidos</h1>
-    <a href="order-new.html" class="btn btn-primary" style="margin-bottom:24px;">+ Nuevo pedido</a>
+    <h1 class="title">Historial de pedidos</h1>
+    <p class="hint" style="margin-bottom:20px;">Todos tus pedidos, sin límite.</p>
     <div id="orders-list"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
   <script src="js/order-status-labels.js"></script>
-  <script src="js/logout.js"></script>
-  <script src="js/nav.js"></script>
   <script>
-    renderNav('customer', 'dashboard-customer.html');
-
     (async () => {
       const { data: { user } } = await db.auth.getUser();
       if (!user) { window.location.href = 'signup.html'; return; }
@@ -42,8 +41,7 @@
         .from('orders')
         .select('*')
         .eq('customer_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(5);
+        .order('created_at', { ascending: false });
 
       const list = document.getElementById('orders-list');
 
@@ -61,7 +59,7 @@
         <div class="order-row">
           <div>
             <div class="order-status ${ORDER_STATUS_COLORS[o.status] || ''}">${ORDER_STATUS_LABELS[o.status] || o.status}</div>
-            <div class="order-meta">${o.estimated_weight_kg ? o.estimated_weight_kg + ' kg · ' : ''}${o.express ? 'Express' : 'Estándar'}</div>
+            <div class="order-meta">${o.estimated_weight_kg ? o.estimated_weight_kg + ' kg · ' : ''}${o.express ? 'Express' : 'Estándar'} · ${new Date(o.created_at).toLocaleDateString('es-CR')}</div>
           </div>
           <div style="text-align:right;">
             <div style="font-family: var(--font-display); font-weight:600;">

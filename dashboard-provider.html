@@ -45,7 +45,8 @@
         .from('orders')
         .select('*')
         .eq('provider_id', user.id)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(5);
 
       const list = document.getElementById('orders-list');
 
