@@ -60,6 +60,7 @@
           <div>
             <div class="order-status ${ORDER_STATUS_COLORS[o.status] || ''}">${ORDER_STATUS_LABELS[o.status] || o.status}</div>
             <div class="order-meta">${o.estimated_weight_kg ? o.estimated_weight_kg + ' kg · ' : ''}${o.express ? 'Express' : 'Estándar'} · ${new Date(o.created_at).toLocaleDateString('es-CR')}</div>
+            ${o.scheduled_pickup_date ? `<div class="order-meta">📅 Programado: ${new Date(o.scheduled_pickup_date + 'T00:00:00').toLocaleDateString('es-CR')}</div>` : ''}
           </div>
           <div style="text-align:right;">
             <div style="font-family: var(--font-display); font-weight:600;">

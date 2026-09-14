@@ -8,11 +8,11 @@
 <style>
   .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 20px 20px 32px; }
   .order-row{
-    display:flex; justify-content:space-between; align-items:center;
     padding: 16px 18px; border: 1px solid var(--color-border);
     border-radius: var(--radius-card); background: var(--color-bg);
     margin-bottom: 12px;
   }
+  .order-row-top{ display:flex; justify-content:space-between; align-items:center; }
   .order-status{ font-size:0.78rem; font-weight:600; text-transform:uppercase; }
   .order-meta{ font-size:0.85rem; color: var(--color-text-muted); margin-top:2px; }
   .empty-state{ text-align:center; color: var(--color-text-muted); padding: 40px 0; }
@@ -28,6 +28,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabase-client.js"></script>
+  <script src="js/pricing.js"></script>
   <script src="js/order-status-labels.js"></script>
   <script src="js/logout.js"></script>
   <script src="js/nav.js"></script>
@@ -57,20 +58,41 @@
         return;
       }
 
-      list.innerHTML = orders.map(o => `
+      list.innerHTML = orders.map(o => {
+        const cancellable = o.status === 'placed';
+
+        return `
         <div class="order-row">
-          <div>
-            <div class="order-status ${ORDER_STATUS_COLORS[o.status] || ''}">${ORDER_STATUS_LABELS[o.status] || o.status}</div>
-            <div class="order-meta">${o.estimated_weight_kg ? o.estimated_weight_kg + ' kg · ' : ''}${o.express ? 'Express' : 'Estándar'}</div>
-          </div>
-          <div style="text-align:right;">
-            <div style="font-family: var(--font-display); font-weight:600;">
-              ${o.price_colones ? '₡' + Math.round(o.price_colones).toLocaleString('es-CR') : (o.estimated_price_colones ? '~₡' + Math.round(o.estimated_price_colones).toLocaleString('es-CR') : '—')}
+          <div class="order-row-top">
+            <div>
+              <div class="order-status ${ORDER_STATUS_COLORS[o.status] || ''}">${ORDER_STATUS_LABELS[o.status] || o.status}</div>
+              <div class="order-meta">${o.estimated_weight_kg ? o.estimated_weight_kg + ' kg · ' : ''}${o.express ? 'Express' : 'Estándar'}</div>
+              ${o.scheduled_pickup_date ? `<div class="order-meta">📅 Programado: ${new Date(o.scheduled_pickup_date + 'T00:00:00').toLocaleDateString('es-CR')}</div>` : ''}
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family: var(--font-display); font-weight:600;">
+                ${o.price_colones ? '₡' + Math.round(o.price_colones).toLocaleString('es-CR') : (o.estimated_price_colones ? '~₡' + Math.round(o.estimated_price_colones).toLocaleString('es-CR') : '—')}
+              </div>
             </div>
           </div>
+          ${cancellable ? `<button class="btn btn-outline" style="margin-top:10px;" onclick="cancelOrder('${o.id}', '${o.status}')">Cancelar pedido</button>` : ''}
         </div>
-      `).join('');
+      `;
+      }).join('');
     })();
+
+    async function cancelOrder(orderId, currentStatus) {
+      if (!confirm('¿Cancelar este pedido? Todavía no ha sido aceptado, así que es completamente gratis.')) return;
+
+      const { error } = await db.from('orders').update({ status: 'cancelled' }).eq('id', orderId);
+
+      if (error) {
+        alert('No se pudo cancelar: ' + error.message);
+        return;
+      }
+
+      window.location.reload();
+    }
   </script>
 </body>
 </html>

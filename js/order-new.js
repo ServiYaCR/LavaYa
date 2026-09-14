@@ -3,6 +3,22 @@ document.getElementById('has_hang_dry').addEventListener('change', (e) => {
   updatePreview();
 });
 
+document.getElementById('scheduling_type').addEventListener('change', (e) => {
+  const dateField = document.getElementById('scheduled-date-field');
+  const dateInput = document.getElementById('scheduled_pickup_date');
+  if (e.target.value === 'scheduled') {
+    dateField.style.display = 'block';
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    dateInput.min = tomorrow.toISOString().split('T')[0];
+    dateInput.required = true;
+  } else {
+    dateField.style.display = 'none';
+    dateInput.required = false;
+    dateInput.value = '';
+  }
+});
+
 ['estimated_weight', 'express', 'pickup_window'].forEach(id => {
   document.getElementById(id).addEventListener('input', updatePreview);
   document.getElementById(id).addEventListener('change', updatePreview);
@@ -45,11 +61,21 @@ document.getElementById('order-form').addEventListener('submit', async (e) => {
 
   const estimatedPrice = calculateEstimatedPrice({ weightKg, express, pickupWindow });
 
+  const isScheduled = document.getElementById('scheduling_type').value === 'scheduled';
+  const scheduledDate = isScheduled ? document.getElementById('scheduled_pickup_date').value : null;
+
+  if (isScheduled && !scheduledDate) {
+    errorText.textContent = 'Selecciona la fecha en la que quieres el servicio.';
+    errorText.style.display = 'block';
+    return;
+  }
+
   const { error } = await db.from('orders').insert({
     customer_id: user.id,
     status: 'placed',
     express,
     pickup_window: pickupWindow,
+    scheduled_pickup_date: scheduledDate,
     bag_labels: bagLabels,
     estimated_weight_kg: weightKg,
     estimated_price_colones: estimatedPrice,

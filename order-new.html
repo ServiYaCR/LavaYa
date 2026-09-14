@@ -41,6 +41,17 @@
           <option value="night">Noche (19:00 - 21:00) — recargo ₡1,500</option>
         </select>
 
+        <p class="section-label">¿Cuándo quieres el servicio?</p>
+        <select id="scheduling_type">
+          <option value="asap">Lo antes posible</option>
+          <option value="scheduled">Programar para un día específico</option>
+        </select>
+        <div id="scheduled-date-field" style="display:none;">
+          <label for="scheduled_pickup_date">Fecha de recogida</label>
+          <input type="date" id="scheduled_pickup_date">
+          <p class="hint">Tu pedido aparecerá para los Lavanderos/as la mañana de ese día. Puedes cancelarlo sin costo hasta un día antes.</p>
+        </div>
+
         <p class="section-label">Notas</p>
         <label for="special_instructions">Instrucciones especiales (opcional)</label>
         <textarea id="special_instructions" placeholder="Ej. Detergente hipoalergénico, no usar suavizante, etc."></textarea>

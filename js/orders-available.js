@@ -65,6 +65,7 @@ async function loadAvailableOrders() {
         </div>
         <div class="order-meta">📍 ${o.canton}, ${o.province} · ${o.distance_km} km de ti</div>
         <div class="order-meta">${windowLabels[o.pickup_window] || o.pickup_window}</div>
+        ${o.scheduled_pickup_date ? `<div class="order-meta">📅 Recogida programada para hoy</div>` : ''}
         ${o.special_instructions ? `<div class="order-meta">"${o.special_instructions}"</div>` : ''}
         <button class="btn btn-primary accept-btn" onclick="acceptOrder('${o.id}')">Aceptar pedido</button>
       </div>

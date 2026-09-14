@@ -76,8 +76,9 @@ Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 ま
 6. 続けて `supabase/migration_006_provider_job_limit.sql` も同様に実行してください(プロバイダー1人あたりの同時受注上限)
 7. 続けて `supabase/migration_007_protect_provider_admin_fields.sql` も同様に実行してください(プロフィール編集画面を追加する前の安全対策)
 8. 続けて `supabase/migration_008_hide_address_after_completion.sql` も同様に実行してください(配達完了後は顧客住所を非表示にする)
-9. GitHubに新しいファイル一式(`order-new.html`, `orders-available.html`, `order-manage.html`, `profile-customer.html`, `profile-provider.html`, `pedidos-historial.html`, `trabajos-historial.html`, `js/`配下一式)と、更新した`dashboard-customer.html`・`dashboard-provider.html`・`README.md`をアップロード
-10. Cloudflareが自動で再デプロイ(数十秒〜1分)
+9. 続けて `supabase/migration_009_scheduling_and_cancellation.sql` も同様に実行してください(スケジュール集荷・キャンセルポリシー: 受注前のみ無料キャンセル可、受注後は一切不可)
+10. GitHubに新しいファイル一式(`order-new.html`, `orders-available.html`, `order-manage.html`, `profile-customer.html`, `profile-provider.html`, `pedidos-historial.html`, `trabajos-historial.html`, `js/`配下一式)と、更新した`dashboard-customer.html`・`dashboard-provider.html`・`README.md`をアップロード
+11. Cloudflareが自動で再デプロイ(数十秒〜1分)
 
 ## Phase 2.3で追加したもの
 
