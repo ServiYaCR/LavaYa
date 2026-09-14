@@ -31,7 +31,9 @@ async function loadOrder() {
   }
 
   let customerProfile = null;
-  if (order.provider_id) {
+  const isFinished = order.status === 'delivered' || order.status === 'cancelled';
+
+  if (order.provider_id && !isFinished) {
     const { data: cp } = await db
       .from('customer_profiles')
       .select('province, canton, address_notes, access_type, latitude, longitude')
@@ -86,7 +88,7 @@ function renderOrder(order, customerProfile) {
     ${weightInputHtml}
 
     ${!isFinalStep && actionLabel ? `<button class="btn btn-primary" id="advance-btn">${actionLabel}</button>` : ''}
-    ${isFinalStep ? `<p class="hint">Este pedido ya está finalizado.</p>` : ''}
+    ${isFinalStep ? `<p class="hint">Este pedido ya está finalizado. Por privacidad, la dirección del cliente ya no está disponible.</p>` : ''}
     <p class="error-text" id="error-text"></p>
   `;
 
