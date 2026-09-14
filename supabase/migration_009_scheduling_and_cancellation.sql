@@ -11,6 +11,9 @@ alter table public.orders
 
 -- 2. 未受注リストの関数を更新: 予約日がまだ来ていない注文はプロバイダーに見せない
 --    (予約日の朝になったら自動的に一覧に出てくる。バッチ処理は不要)
+--    ※ 戻り値の列構成が変わるため、まず既存の関数を削除してから作り直す
+drop function if exists public.get_available_orders_with_distance(double precision, double precision);
+
 create or replace function public.get_available_orders_with_distance(
   provider_lat double precision,
   provider_lng double precision

@@ -11,7 +11,7 @@ if (signupForm) {
     const password = document.getElementById('password').value;
 
     if (!document.getElementById('accept_privacy').checked) {
-      errorText.textContent = 'Debes aceptar la Política de Privacidad para continuar.';
+      errorText.textContent = 'Debes aceptar la Política de Privacidad y los Términos y Condiciones para continuar.';
       errorText.style.display = 'block';
       return;
     }
