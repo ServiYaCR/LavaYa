@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registro de Lavandero/a · ServiYa</title>
 <link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
   <div class="screen">
@@ -41,9 +42,10 @@
         <label for="service_radius">Radio de servicio (km)</label>
         <input type="number" id="service_radius" min="1" max="30" value="5" required>
 
-        <label for="coords">Ubicación desde donde vas a operar</label>
-        <button type="button" id="use-location" class="btn btn-outline" style="margin-top:0;">📍 Usar mi ubicación actual</button>
-        <p class="hint" id="coords-display">Aún no se ha capturado tu ubicación.</p>
+        <label for="coords">Ubicación desde donde vas a operar (arrastra el marcador para ajustar)</label>
+        <div id="map-picker"></div>
+        <button type="button" id="use-location" class="btn btn-outline" style="margin-top:8px;">📍 Centrar en mi ubicación actual</button>
+        <p class="hint" id="coords-display">Ubicando...</p>
         <input type="hidden" id="latitude">
         <input type="hidden" id="longitude">
 
@@ -61,6 +63,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../js/map-picker.js"></script>
   <script src="../js/register-provider.js"></script>
 </body>
 </html>

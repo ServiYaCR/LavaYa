@@ -35,21 +35,28 @@ async function loadProfile() {
     document.getElementById('latitude').value = customerProfile.latitude || '';
     document.getElementById('longitude').value = customerProfile.longitude || '';
 
-    if (customerProfile.latitude) {
-      document.getElementById('coords-display').textContent =
-        `Ubicación actual: ${customerProfile.latitude.toFixed(5)}, ${customerProfile.longitude.toFixed(5)}`;
-    }
+    // 保存済みの位置があればそこを中心に、無ければGPS→それも無理ならサンホセ中心部
+    initMapPicker({
+      mapDivId: 'map-picker',
+      latInputId: 'latitude',
+      lngInputId: 'longitude',
+      displayId: 'coords-display',
+      defaultLat: customerProfile.latitude,
+      defaultLng: customerProfile.longitude
+    });
+  } else {
+    initMapPicker({
+      mapDivId: 'map-picker',
+      latInputId: 'latitude',
+      lngInputId: 'longitude',
+      displayId: 'coords-display'
+    });
   }
 }
 
 document.getElementById('use-location').addEventListener('click', () => {
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      document.getElementById('latitude').value = pos.coords.latitude;
-      document.getElementById('longitude').value = pos.coords.longitude;
-      document.getElementById('coords-display').textContent =
-        `Ubicación capturada: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
-    },
+    (pos) => recenterMapPicker(pos.coords.latitude, pos.coords.longitude, 'latitude', 'longitude', 'coords-display'),
     () => {
       document.getElementById('coords-display').textContent = 'No se pudo obtener tu ubicación.';
     }

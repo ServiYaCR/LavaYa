@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registro de cliente · ServiYa</title>
 <link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
   <div class="screen">
@@ -18,9 +19,10 @@
         <input type="tel" id="phone" required placeholder="8888-8888">
 
         <p class="section-label">Ubicación de recogida</p>
-        <label for="coords">Pin GPS de tu casa</label>
-        <button type="button" id="use-location" class="btn btn-outline" style="margin-top:0;">📍 Usar mi ubicación actual</button>
-        <p class="hint" id="coords-display">Aún no se ha capturado tu ubicación.</p>
+        <label for="coords">Pin de tu casa (arrastra el marcador para ajustar)</label>
+        <div id="map-picker"></div>
+        <button type="button" id="use-location" class="btn btn-outline" style="margin-top:8px;">📍 Centrar en mi ubicación actual</button>
+        <p class="hint" id="coords-display">Ubicando...</p>
         <input type="hidden" id="latitude">
         <input type="hidden" id="longitude">
 
@@ -58,6 +60,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
   <script src="../js/cr-locations.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../js/map-picker.js"></script>
   <script src="../js/register-customer.js"></script>
 </body>
 </html>

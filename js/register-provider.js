@@ -11,18 +11,46 @@ cedulaInput.addEventListener('input', () => {
   cedulaInput.value = formatted;
 });
 
+// 地図の初期化: まずGPSでの現在地取得を試み、取れなければサンホセ中心部を表示
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      initMapPicker({
+        mapDivId: 'map-picker',
+        latInputId: 'latitude',
+        lngInputId: 'longitude',
+        displayId: 'coords-display',
+        defaultLat: pos.coords.latitude,
+        defaultLng: pos.coords.longitude
+      });
+    },
+    () => {
+      initMapPicker({
+        mapDivId: 'map-picker',
+        latInputId: 'latitude',
+        lngInputId: 'longitude',
+        displayId: 'coords-display'
+      });
+      document.getElementById('coords-display').textContent =
+        'No se pudo obtener tu ubicación automáticamente. Arrastra el pin en el mapa.';
+    }
+  );
+} else {
+  initMapPicker({
+    mapDivId: 'map-picker',
+    latInputId: 'latitude',
+    lngInputId: 'longitude',
+    displayId: 'coords-display'
+  });
+}
+
 document.getElementById('use-location').addEventListener('click', () => {
   if (!navigator.geolocation) {
     document.getElementById('coords-display').textContent = 'Tu navegador no soporta geolocalización.';
     return;
   }
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      document.getElementById('latitude').value = pos.coords.latitude;
-      document.getElementById('longitude').value = pos.coords.longitude;
-      document.getElementById('coords-display').textContent =
-        `Ubicación capturada: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
-    },
+    (pos) => recenterMapPicker(pos.coords.latitude, pos.coords.longitude, 'latitude', 'longitude', 'coords-display'),
     () => {
       document.getElementById('coords-display').textContent =
         'No se pudo obtener tu ubicación. Revisa los permisos del navegador.';
@@ -50,7 +78,7 @@ document.getElementById('provider-form').addEventListener('submit', async (e) =>
   }
 
   if (!document.getElementById('latitude').value) {
-    errorText.textContent = 'Por favor captura tu ubicación GPS antes de continuar.';
+    errorText.textContent = 'Por favor confirma tu ubicación en el mapa antes de continuar.';
     errorText.style.display = 'block';
     return;
   }

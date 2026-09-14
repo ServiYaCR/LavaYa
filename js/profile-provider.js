@@ -69,21 +69,27 @@ async function loadProfile() {
     document.getElementById('status-badge').textContent =
       STATUS_BADGE_LABELS[providerProfile.status] || providerProfile.status;
 
-    if (providerProfile.latitude) {
-      document.getElementById('coords-display').textContent =
-        `Ubicación actual: ${providerProfile.latitude.toFixed(5)}, ${providerProfile.longitude.toFixed(5)}`;
-    }
+    initMapPicker({
+      mapDivId: 'map-picker',
+      latInputId: 'latitude',
+      lngInputId: 'longitude',
+      displayId: 'coords-display',
+      defaultLat: providerProfile.latitude,
+      defaultLng: providerProfile.longitude
+    });
+  } else {
+    initMapPicker({
+      mapDivId: 'map-picker',
+      latInputId: 'latitude',
+      lngInputId: 'longitude',
+      displayId: 'coords-display'
+    });
   }
 }
 
 document.getElementById('use-location').addEventListener('click', () => {
   navigator.geolocation.getCurrentPosition(
-    (pos) => {
-      document.getElementById('latitude').value = pos.coords.latitude;
-      document.getElementById('longitude').value = pos.coords.longitude;
-      document.getElementById('coords-display').textContent =
-        `Ubicación capturada: ${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
-    },
+    (pos) => recenterMapPicker(pos.coords.latitude, pos.coords.longitude, 'latitude', 'longitude', 'coords-display'),
     () => {
       document.getElementById('coords-display').textContent = 'No se pudo obtener tu ubicación.';
     }
