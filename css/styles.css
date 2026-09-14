@@ -11,6 +11,7 @@
   --color-border: #dbe7e3;
   --color-success: #3f8f5f;
   --color-danger: #c1443b;
+  --color-info: #2e7dd1;
   --radius-card: 18px;
   --radius-control: 12px;
   --font-display: 'Space Grotesk', sans-serif;
@@ -317,7 +318,7 @@ textarea{ resize: vertical; min-height: 88px; }
 
 /* --- 注文/仕事ステータスの色分け --- */
 .status-neutral{ color: var(--color-text-muted); }
-.status-progress{ color: var(--color-primary); }
+.status-progress{ color: var(--color-info); }
 .status-warning{ color: var(--color-accent); }
 .status-success{ color: var(--color-success); }
 .status-danger{ color: var(--color-danger); }
