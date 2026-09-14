@@ -2,7 +2,8 @@
 
 :root{
   --color-bg: #ffffff;
-  --color-bg-soft: #c3d6ef;
+  --color-bg-soft: #0a1f3d;
+  --color-highlight-soft: #eef3fa;
   --color-primary: #14335e;
   --color-primary-dark: #0b2039;
   --color-accent: #e8a33d;
@@ -191,7 +192,7 @@ textarea{ resize: vertical; min-height: 88px; }
   width: 44px;
   height: 44px;
   border-radius: 12px;
-  background: var(--color-bg-soft);
+  background: var(--color-highlight-soft);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -254,11 +255,11 @@ textarea{ resize: vertical; min-height: 88px; }
 .topnav a{
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--color-primary-dark);
+  color: #ffffff;
   text-decoration: none;
 }
 .topnav .logout-link{
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.75);
   font-weight: 500;
 }
 
@@ -275,7 +276,7 @@ textarea{ resize: vertical; min-height: 88px; }
 .app-nav .brand-mini{
   font-family: var(--font-display);
   font-weight: 700;
-  color: var(--color-primary-dark);
+  color: #ffffff;
   text-decoration: none;
   font-size: 1.05rem;
 }
@@ -322,3 +323,9 @@ textarea{ resize: vertical; min-height: 88px; }
 .status-warning{ color: var(--color-accent); }
 .status-success{ color: var(--color-success); }
 .status-danger{ color: var(--color-danger); }
+
+/* --- 濃紺の背景に直接乗るテキスト(カードの外側)は白系にする --- */
+.orders-wrap > h1.title{ color: #ffffff; }
+.orders-wrap > p.subtitle,
+.orders-wrap > p.hint{ color: rgba(255, 255, 255, 0.8); }
+.empty-state{ color: rgba(255, 255, 255, 0.7); }

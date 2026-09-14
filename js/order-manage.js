@@ -67,7 +67,7 @@ function renderOrder(order, customerProfile) {
   };
 
   const pickupAddressHtml = customerProfile ? `
-    <div class="card" style="margin: 16px 0; background: var(--color-bg-soft); border:none;">
+    <div class="card" style="margin: 16px 0; background: var(--color-highlight-soft); border:none;">
       <p class="section-label" style="margin-top:0;">Dirección de recogida</p>
       <p class="hint">${customerProfile.canton}, ${customerProfile.province}</p>
       <p class="hint">${customerProfile.address_notes}</p>
