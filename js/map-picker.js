@@ -5,10 +5,12 @@
 
 let _mapPickerInstance = null;
 let _mapPickerMarker = null;
+let _mapPickerOnChange = null;
 
-function initMapPicker({ mapDivId, latInputId, lngInputId, displayId, defaultLat, defaultLng }) {
+function initMapPicker({ mapDivId, latInputId, lngInputId, displayId, defaultLat, defaultLng, onChange }) {
   const startLat = defaultLat || 9.9281;  // フォールバック: サンホセ中心部
   const startLng = defaultLng || -84.0907;
+  _mapPickerOnChange = onChange || null;
 
   _mapPickerInstance = L.map(mapDivId).setView([startLat, startLng], 15);
 
@@ -26,6 +28,7 @@ function initMapPicker({ mapDivId, latInputId, lngInputId, displayId, defaultLat
       document.getElementById(displayId).textContent =
         `Ubicación: ${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)} (arrastra el pin para ajustar)`;
     }
+    if (_mapPickerOnChange) _mapPickerOnChange(latlng.lat, latlng.lng);
   }
 
   _mapPickerMarker.on('dragend', () => updateFromLatLng(_mapPickerMarker.getLatLng()));
@@ -50,4 +53,5 @@ function recenterMapPicker(lat, lng, latInputId, lngInputId, displayId) {
     document.getElementById(displayId).textContent =
       `Ubicación: ${lat.toFixed(5)}, ${lng.toFixed(5)} (arrastra el pin para ajustar)`;
   }
+  if (_mapPickerOnChange) _mapPickerOnChange(lat, lng);
 }

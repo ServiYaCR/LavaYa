@@ -55,7 +55,7 @@ as $$
   join public.customer_profiles cp on cp.id = o.customer_id
   where o.status = 'placed'
     and o.provider_id is null
-    and (o.scheduled_pickup_date is null or o.scheduled_pickup_date <= current_date)
+    and (o.scheduled_pickup_date is null or o.scheduled_pickup_date <= (now() at time zone 'America/Costa_Rica')::date)
     and exists (
       select 1 from public.provider_profiles pp
       where pp.id = auth.uid() and pp.status = 'approved'

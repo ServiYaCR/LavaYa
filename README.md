@@ -77,8 +77,26 @@ Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 ま
 7. 続けて `supabase/migration_007_protect_provider_admin_fields.sql` も同様に実行してください(プロフィール編集画面を追加する前の安全対策)
 8. 続けて `supabase/migration_008_hide_address_after_completion.sql` も同様に実行してください(配達完了後は顧客住所を非表示にする)
 9. 続けて `supabase/migration_009_scheduling_and_cancellation.sql` も同様に実行してください(スケジュール集荷・キャンセルポリシー: 受注前のみ無料キャンセル可、受注後は一切不可)
-10. GitHubに新しいファイル一式(`order-new.html`, `orders-available.html`, `order-manage.html`, `profile-customer.html`, `profile-provider.html`, `pedidos-historial.html`, `trabajos-historial.html`, `js/`配下一式)と、更新した`dashboard-customer.html`・`dashboard-provider.html`・`README.md`をアップロード
-11. Cloudflareが自動で再デプロイ(数十秒〜1分)
+10. 続けて `supabase/migration_011_notifications_and_support.sql` も同様に実行してください(アプリ内通知・予約前日リマインダー・サポート申請)
+11. 続けて `supabase/migration_012_pricing_v2.sql` も同様に実行してください(大型・特殊品の点数を保存するカラム追加)
+12. 続けて `supabase/migration_013_admin.sql` も同様に実行してください(アドミンページ用の権限追加。事前にdaisuke.baba@gmail.comでアカウント登録済みであることを確認してください)
+13. GitHubに新しいファイル一式(`order-new.html`, `orders-available.html`, `order-manage.html`, `profile-customer.html`, `profile-provider.html`, `pedidos-historial.html`, `trabajos-historial.html`, `notifications.html`, `support-request.html`, `admin.html`, `js/`配下一式)と、更新した`dashboard-customer.html`・`dashboard-provider.html`・`README.md`をアップロード
+14. Cloudflareが自動で再デプロイ(数十秒〜1分)
+
+## Phase 3で変更した料金体系
+
+- 運営手数料: 15%→**30%**
+- 最低料金: **₡10,000に統一**(標準・Express共通)
+- **Trust & Safetyフィー**: 注文ごとに固定₡1,500、手数料の分配対象外(全額運営保持、破損・紛失補償の原資)
+- **大型・特殊品料金**: 掛け布団・厚手コート等、1点₡4,000
+
+## Phase 3で追加したサービスエリア制限
+
+初期は**Rohrmoser・Sabana地区限定**でサービスを提供します。Parque La Sabana(9.935556, -84.104167)を中心に半径3.5kmの円で判定しています(`js/service-area.js`)。エリア外の住所では顧客登録・プロバイダー登録ができません。
+
+## Phase 3で追加したアドミンページ
+
+`admin.html`(ナビゲーションには表示されません、直接URLでアクセス)。daisuke.baba@gmail.comのアカウントのみアクセス可能。プロバイダー審査、サポート申請の承諾/却下、全注文の閲覧・再割当・キャンセル、財務サマリー、CSVエクスポートができます。
 
 ## Phase 2.3で追加したもの
 

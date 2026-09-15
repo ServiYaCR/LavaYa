@@ -11,7 +11,7 @@
   <div class="screen">
     <div class="card">
       <h1 class="title">Completa tu perfil</h1>
-      <p class="subtitle">Esto ayuda a tu Lavandero/a a encontrarte y a que tu ropa vuelva en perfecto estado.</p>
+      <p class="subtitle">Esto ayuda a tu Lavandero/a a encontrarte y a que tu ropa vuelva en perfecto estado. Por ahora, ServiYa solo opera en Rohrmoser y Sabana.</p>
 
       <form id="customer-form">
         <p class="section-label">Contacto</p>
@@ -23,6 +23,7 @@
         <div id="map-picker"></div>
         <button type="button" id="use-location" class="btn btn-outline" style="margin-top:8px;">📍 Centrar en mi ubicación actual</button>
         <p class="hint" id="coords-display">Ubicando...</p>
+        <p class="hint" id="service-area-msg"></p>
         <input type="hidden" id="latitude">
         <input type="hidden" id="longitude">
 
@@ -60,6 +61,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
   <script src="../js/cr-locations.js"></script>
+  <script src="../js/service-area.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="../js/map-picker.js"></script>
   <script src="../js/register-customer.js"></script>

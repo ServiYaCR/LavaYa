@@ -19,7 +19,7 @@ document.getElementById('scheduling_type').addEventListener('change', (e) => {
   }
 });
 
-['estimated_weight', 'express', 'pickup_window'].forEach(id => {
+['estimated_weight', 'express', 'pickup_window', 'oversized_items'].forEach(id => {
   document.getElementById(id).addEventListener('input', updatePreview);
   document.getElementById(id).addEventListener('change', updatePreview);
 });
@@ -28,8 +28,9 @@ function updatePreview() {
   const weightKg = parseFloat(document.getElementById('estimated_weight').value) || 0;
   const express = document.getElementById('express').value === 'true';
   const pickupWindow = document.getElementById('pickup_window').value;
+  const oversizedItems = parseInt(document.getElementById('oversized_items').value, 10) || 0;
 
-  const price = calculateEstimatedPrice({ weightKg, express, pickupWindow });
+  const price = calculateEstimatedPrice({ weightKg, express, pickupWindow, oversizedItems });
   document.getElementById('price-preview').textContent = formatColones(price);
 }
 
@@ -50,6 +51,7 @@ document.getElementById('order-form').addEventListener('submit', async (e) => {
   const express = document.getElementById('express').value === 'true';
   const pickupWindow = document.getElementById('pickup_window').value;
   const hasHangDry = document.getElementById('has_hang_dry').checked;
+  const oversizedItems = parseInt(document.getElementById('oversized_items').value, 10) || 0;
 
   const bagLabels = [{ type: 'machine_dry' }];
   if (hasHangDry) {
@@ -59,7 +61,7 @@ document.getElementById('order-form').addEventListener('submit', async (e) => {
     });
   }
 
-  const estimatedPrice = calculateEstimatedPrice({ weightKg, express, pickupWindow });
+  const estimatedPrice = calculateEstimatedPrice({ weightKg, express, pickupWindow, oversizedItems });
 
   const isScheduled = document.getElementById('scheduling_type').value === 'scheduled';
   const scheduledDate = isScheduled ? document.getElementById('scheduled_pickup_date').value : null;
@@ -77,6 +79,7 @@ document.getElementById('order-form').addEventListener('submit', async (e) => {
     pickup_window: pickupWindow,
     scheduled_pickup_date: scheduledDate,
     bag_labels: bagLabels,
+    oversized_items: oversizedItems,
     estimated_weight_kg: weightKg,
     estimated_price_colones: estimatedPrice,
     special_instructions: document.getElementById('special_instructions').value.trim()

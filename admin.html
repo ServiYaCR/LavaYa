@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · ServiYa</title>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .admin-wrap{ max-width: 900px; margin: 0 auto; padding: 20px 20px 60px; }
+  .admin-section{
+    background: var(--color-bg); border: 1px solid var(--color-border);
+    border-radius: var(--radius-card); padding: 20px; margin-bottom: 24px;
+  }
+  .admin-section h2{ font-family: var(--font-display); font-size: 1.1rem; margin: 0 0 12px; }
+  table{ width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td{ text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
+  th{ color: var(--color-text-muted); font-weight: 600; }
+  .small-btn{
+    display: inline-block; padding: 6px 12px; border-radius: 8px; border: none;
+    font-size: 0.8rem; font-weight: 600; cursor: pointer; margin-right: 6px;
+  }
+  .btn-approve{ background: var(--color-success); color: #fff; }
+  .btn-reject{ background: var(--color-danger); color: #fff; }
+  .btn-cancel{ background: var(--color-text-muted); color: #fff; }
+  select.small-select{ padding: 4px 8px; font-size: 0.8rem; }
+  .denied{ text-align:center; color: rgba(255,255,255,0.8); padding: 60px 20px; }
+</style>
+</head>
+<body>
+  <div id="app-nav" class="app-nav"></div>
+  <div class="admin-wrap" id="admin-content">
+    <p class="hint" style="color: rgba(255,255,255,0.7);">Verificando acceso...</p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/pricing.js"></script>
+  <script src="js/order-status-labels.js"></script>
+  <script src="js/logout.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notificaciones · ServiYa</title>
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .orders-wrap{ max-width: 480px; margin: 0 auto; padding: 20px 20px 32px; }
+  .notif-row{
+    padding: 14px 16px; border: 1px solid var(--color-border);
+    border-radius: var(--radius-card); background: var(--color-bg);
+    margin-bottom: 10px;
+  }
+  .notif-row.unread{ border-color: var(--color-primary); background: var(--color-highlight-soft); }
+  .notif-time{ font-size: 0.78rem; color: var(--color-text-muted); margin-top: 4px; }
+  .empty-state{ text-align:center; color: rgba(255,255,255,0.7); padding: 40px 0; }
+</style>
+</head>
+<body>
+  <div id="app-nav" class="app-nav"></div>
+  <div class="orders-wrap">
+    <h1 class="title">Notificaciones</h1>
+    <div id="notif-list"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/logout.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+    (async () => {
+      const { data: { user } } = await db.auth.getUser();
+      if (!user) { window.location.href = 'signup.html'; return; }
+
+      const { data: profile } = await db.from('profiles').select('role').eq('id', user.id).single();
+      renderNav(profile && profile.role === 'provider' ? 'provider' : 'customer', 'notifications.html');
+
+      const { data: notifs, error } = await db
+        .from('notifications')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      const list = document.getElementById('notif-list');
+
+      if (error) {
+        list.innerHTML = `<p class="error-text" style="display:block;">${error.message}</p>`;
+        return;
+      }
+
+      if (!notifs || notifs.length === 0) {
+        list.innerHTML = '<div class="empty-state">No tienes notificaciones.</div>';
+        return;
+      }
+
+      list.innerHTML = notifs.map(n => `
+        <div class="notif-row ${!n.read_at ? 'unread' : ''}">
+          <div>${n.message}</div>
+          <div class="notif-time">${new Date(n.created_at).toLocaleString('es-CR')}</div>
+        </div>
+      `).join('');
+
+      // 開いたら未読を既読にする
+      const unreadIds = notifs.filter(n => !n.read_at).map(n => n.id);
+      if (unreadIds.length > 0) {
+        await db.from('notifications').update({ read_at: new Date().toISOString() }).in('id', unreadIds);
+      }
+    })();
+  </script>
+</body>
+</html>

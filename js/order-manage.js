@@ -120,7 +120,8 @@ async function advanceStatus(order) {
     updates.price_colones = calculateEstimatedPrice({
       weightKg: finalWeight,
       express: order.express,
-      pickupWindow: order.pickup_window
+      pickupWindow: order.pickup_window,
+      oversizedItems: order.oversized_items || 0
     });
   }
 

@@ -83,6 +83,7 @@ create table public.orders (
   detergent_pref text check (detergent_pref in ('premium','hypoallergenic','own')),
   special_instructions text,
   unsanitary_flagged boolean not null default false,
+  oversized_items int not null default 0,   -- 大型・特殊品の点数(掛け布団等)
   pickup_photo_url text,                    -- 集荷時の証跡写真
   delivery_photo_url text,                  -- 配達時の証跡写真
   created_at timestamptz not null default now(),

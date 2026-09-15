@@ -8,18 +8,22 @@ function renderNav(role, activeHref) {
     ? [
         { href: 'dashboard-customer.html', label: 'Mis pedidos' },
         { href: 'order-new.html', label: 'Nuevo pedido' },
+        { href: 'notifications.html', label: 'Notificaciones', badge: true },
+        { href: 'support-request.html', label: 'Contactar soporte' },
         { href: 'profile-customer.html', label: 'Mi perfil' }
       ]
     : [
         { href: 'dashboard-provider.html', label: 'Mis trabajos' },
         { href: 'orders-available.html', label: 'Pedidos disponibles' },
+        { href: 'notifications.html', label: 'Notificaciones', badge: true },
+        { href: 'support-request.html', label: 'Contactar soporte' },
         { href: 'profile-provider.html', label: 'Mi perfil' }
       ];
 
   const homeHref = role === 'customer' ? 'dashboard-customer.html' : 'dashboard-provider.html';
 
   const linksHtml = links.map(l =>
-    `<a href="${l.href}" class="${l.href === activeHref ? 'active-link' : ''}">${l.label}</a>`
+    `<a href="${l.href}" class="${l.href === activeHref ? 'active-link' : ''}">${l.label}${l.badge ? '<span id="nav-unread-badge" style="display:none; margin-left:6px; background:var(--color-danger); color:#fff; border-radius:10px; padding:1px 7px; font-size:0.75rem;"></span>' : ''}</a>`
   ).join('');
 
   container.innerHTML = `
@@ -40,4 +44,20 @@ function renderNav(role, activeHref) {
   });
 
   document.addEventListener('click', () => dropdown.classList.remove('open'));
+
+  // 未読通知数を取得してバッジに表示
+  (async () => {
+    const { data: { user } } = await db.auth.getUser();
+    if (!user) return;
+    const { count } = await db
+      .from('notifications')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .is('read_at', null);
+    const badge = document.getElementById('nav-unread-badge');
+    if (badge && count > 0) {
+      badge.textContent = count;
+      badge.style.display = 'inline-block';
+    }
+  })();
 }

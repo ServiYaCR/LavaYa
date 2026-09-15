@@ -1,5 +1,16 @@
 populateProvinceCantonSelects('province', 'canton');
 
+function updateServiceAreaMessage(lat, lng) {
+  const msg = document.getElementById('service-area-msg');
+  if (isWithinServiceArea(lat, lng)) {
+    msg.textContent = `✅ Dentro de la zona de servicio (${SERVICE_AREA.name}).`;
+    msg.style.color = 'var(--color-success)';
+  } else {
+    msg.textContent = `⚠️ Esta ubicación está fuera de nuestra zona de servicio actual (${SERVICE_AREA.name}). Por ahora no podemos completar tu registro.`;
+    msg.style.color = 'var(--color-danger)';
+  }
+}
+
 // 地図の初期化: まずGPSでの現在地取得を試み、取れなければサンホセ中心部を表示
 if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
@@ -10,7 +21,8 @@ if (navigator.geolocation) {
         lngInputId: 'longitude',
         displayId: 'coords-display',
         defaultLat: pos.coords.latitude,
-        defaultLng: pos.coords.longitude
+        defaultLng: pos.coords.longitude,
+        onChange: updateServiceAreaMessage
       });
     },
     () => {
@@ -18,7 +30,8 @@ if (navigator.geolocation) {
         mapDivId: 'map-picker',
         latInputId: 'latitude',
         lngInputId: 'longitude',
-        displayId: 'coords-display'
+        displayId: 'coords-display',
+        onChange: updateServiceAreaMessage
       });
       document.getElementById('coords-display').textContent =
         'No se pudo obtener tu ubicación automáticamente. Arrastra el pin en el mapa hasta tu casa.';
@@ -29,7 +42,8 @@ if (navigator.geolocation) {
     mapDivId: 'map-picker',
     latInputId: 'latitude',
     lngInputId: 'longitude',
-    displayId: 'coords-display'
+    displayId: 'coords-display',
+    onChange: updateServiceAreaMessage
   });
 }
 
@@ -60,6 +74,12 @@ document.getElementById('customer-form').addEventListener('submit', async (e) =>
 
   if (!document.getElementById('latitude').value) {
     errorText.textContent = 'Por favor confirma tu ubicación en el mapa antes de continuar.';
+    errorText.style.display = 'block';
+    return;
+  }
+
+  if (!isWithinServiceArea(parseFloat(document.getElementById('latitude').value), parseFloat(document.getElementById('longitude').value))) {
+    errorText.textContent = `Lo sentimos, por ahora ServiYa solo opera en ${SERVICE_AREA.name}. Tu ubicación está fuera de esa zona.`;
     errorText.style.display = 'block';
     return;
   }

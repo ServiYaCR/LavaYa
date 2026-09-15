@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es-CR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contactar soporte · ServiYa</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app-nav" class="app-nav"></div>
+  <div class="screen">
+    <div class="card">
+      <h1 class="title">Contactar soporte</h1>
+      <p class="subtitle">Un pedido ya recogido, un artículo dañado o perdido, u otra situación excepcional. Revisamos cada caso y te avisamos con la decisión.</p>
+
+      <form id="ticket-form">
+        <label for="category">Tipo de solicitud</label>
+        <select id="category" required>
+          <option value="cancellation_exception">Cancelar un pedido ya aceptado (caso excepcional)</option>
+          <option value="damage_claim">Ropa dañada o perdida</option>
+          <option value="other">Otro</option>
+        </select>
+
+        <label for="order_id">ID del pedido (opcional, si aplica)</label>
+        <input type="text" id="order_id" placeholder="Puedes copiarlo desde el detalle del pedido">
+
+        <label for="description">Describe la situación</label>
+        <textarea id="description" required placeholder="Cuéntanos qué pasó, con el mayor detalle posible"></textarea>
+
+        <button type="submit" class="btn btn-primary">Enviar solicitud</button>
+        <p class="hint" id="success-msg" style="display:none; color: var(--color-success);">Solicitud enviada. Te avisaremos por notificación cuando tengamos una respuesta.</p>
+        <p class="error-text" id="error-text"></p>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/logout.js"></script>
+  <script src="js/nav.js"></script>
+  <script>
+    let currentUser = null;
+
+    (async () => {
+      const { data: { user } } = await db.auth.getUser();
+      if (!user) { window.location.href = 'signup.html'; return; }
+      currentUser = user;
+
+      const { data: profile } = await db.from('profiles').select('role').eq('id', user.id).single();
+      renderNav(profile && profile.role === 'provider' ? 'provider' : 'customer', 'support-request.html');
+
+      // URLに?order_id=...があれば自動入力
+      const params = new URLSearchParams(window.location.search);
+      const orderId = params.get('order_id');
+      if (orderId) document.getElementById('order_id').value = orderId;
+    })();
+
+    document.getElementById('ticket-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const errorText = document.getElementById('error-text');
+      const successMsg = document.getElementById('success-msg');
+      errorText.style.display = 'none';
+      successMsg.style.display = 'none';
+
+      const orderIdRaw = document.getElementById('order_id').value.trim();
+
+      const { error } = await db.from('support_tickets').insert({
+        reporter_id: currentUser.id,
+        order_id: orderIdRaw || null,
+        category: document.getElementById('category').value,
+        description: document.getElementById('description').value.trim()
+      });
+
+      if (error) {
+        errorText.textContent = error.message;
+        errorText.style.display = 'block';
+        return;
+      }
+
+      successMsg.style.display = 'block';
+      document.getElementById('ticket-form').reset();
+    });
+  </script>
+</body>
+</html>

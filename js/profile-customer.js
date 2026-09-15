@@ -3,6 +3,17 @@ populateProvinceCantonSelects('province', 'canton');
 
 let currentUser = null;
 
+function updateServiceAreaMessage(lat, lng) {
+  const msg = document.getElementById('service-area-msg');
+  if (isWithinServiceArea(lat, lng)) {
+    msg.textContent = `✅ Dentro de la zona de servicio (${SERVICE_AREA.name}).`;
+    msg.style.color = 'var(--color-success)';
+  } else {
+    msg.textContent = `⚠️ Esta ubicación está fuera de nuestra zona de servicio actual (${SERVICE_AREA.name}).`;
+    msg.style.color = 'var(--color-danger)';
+  }
+}
+
 async function loadProfile() {
   const { data: { user } } = await db.auth.getUser();
   if (!user) { window.location.href = 'signup.html'; return; }
@@ -42,14 +53,16 @@ async function loadProfile() {
       lngInputId: 'longitude',
       displayId: 'coords-display',
       defaultLat: customerProfile.latitude,
-      defaultLng: customerProfile.longitude
+      defaultLng: customerProfile.longitude,
+      onChange: updateServiceAreaMessage
     });
   } else {
     initMapPicker({
       mapDivId: 'map-picker',
       latInputId: 'latitude',
       lngInputId: 'longitude',
-      displayId: 'coords-display'
+      displayId: 'coords-display',
+      onChange: updateServiceAreaMessage
     });
   }
 }
@@ -69,6 +82,15 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
   const savedMsg = document.getElementById('saved-msg');
   errorText.style.display = 'none';
   savedMsg.style.display = 'none';
+
+  const lat = parseFloat(document.getElementById('latitude').value);
+  const lng = parseFloat(document.getElementById('longitude').value);
+
+  if (!isWithinServiceArea(lat, lng)) {
+    errorText.textContent = `Lo sentimos, por ahora ServiYa solo opera en ${SERVICE_AREA.name}. Esa ubicación está fuera de esa zona.`;
+    errorText.style.display = 'block';
+    return;
+  }
 
   const { error: profileError } = await db.from('profiles').update({
     full_name: document.getElementById('full_name').value.trim(),
