@@ -1,3 +1,8 @@
+// ============================================================
+// admin.js — VERSION CHECK: v2-debug-2026-09-15
+// もしGitHub上でこの1行目のコメントが見えないなら、
+// それはまだ古いファイルのままです。
+// ============================================================
 const ACCESS_TYPE_LABELS = {
   condominio_seguridad: 'Condominio con seguridad',
   casa_independiente: 'Casa independiente',
@@ -12,7 +17,7 @@ async function checkAdminAccess() {
 
   if (!profile || !profile.is_admin) {
     document.getElementById('admin-content').innerHTML =
-      '<div class="denied">No tienes acceso a esta página.</div>';
+      `<div class="denied">No tienes acceso a esta página.<br><span style="font-size:0.8rem;">Conectado como: ${user.email} (is_admin: ${profile ? profile.is_admin : 'perfil no encontrado'})</span></div>`;
     return false;
   }
 
