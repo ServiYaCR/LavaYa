@@ -1,3 +1,8 @@
+// ============================================================
+// admin.js — VERSION CHECK: v2-debug-2026-09-15
+// もしGitHub上でこの1行目のコメントが見えないなら、
+// それはまだ古いファイルのままです。
+// ============================================================
 const ACCESS_TYPE_LABELS = {
   condominio_seguridad: 'Condominio con seguridad',
   casa_independiente: 'Casa independiente',
