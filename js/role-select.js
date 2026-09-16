@@ -1,3 +1,16 @@
+// role-select.htmlに来た時点で、profiles行がまだ無ければ作る
+// (Googleログインの場合、signup.htmlの処理を通らないためこの補完が必要)
+async function ensureProfileExists(user) {
+  const { data: existing } = await db.from('profiles').select('id').eq('id', user.id).maybeSingle();
+  if (!existing) {
+    await db.from('profiles').insert({
+      id: user.id,
+      full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email,
+      email: user.email
+    });
+  }
+}
+
 async function setRole(role) {
   const errorText = document.getElementById('error-text');
   errorText.style.display = 'none';
@@ -7,6 +20,8 @@ async function setRole(role) {
     window.location.href = 'signup.html';
     return;
   }
+
+  await ensureProfileExists(user);
 
   // profiles.role にフラグを保存 → 次回ログイン時もこれを見て画面を出し分ける
   const { error } = await db.from('profiles').update({ role }).eq('id', user.id);
@@ -30,6 +45,8 @@ document.getElementById('role-provider').addEventListener('click', () => setRole
 (async () => {
   const { data: { user } } = await db.auth.getUser();
   if (!user) return;
+
+  await ensureProfileExists(user);
 
   const { data: profile } = await db.from('profiles').select('role').eq('id', user.id).single();
   if (profile && profile.role === 'customer') {
