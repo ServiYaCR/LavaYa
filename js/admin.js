@@ -186,7 +186,9 @@ async function loadRecentOrders() {
     <h2>Pedidos recientes (${orders.length})</h2>
     <table>
       <tr><th>Creado</th><th>Programado</th><th>Estado</th><th>Peso</th><th>Monto</th><th>Lavandero/a</th><th>Acción</th></tr>
-      ${orders.map(o => `
+      ${orders.map(o => {
+        const isFinal = o.status === 'delivered' || o.status === 'cancelled';
+        return `
         <tr>
           <td>${new Date(o.created_at).toLocaleDateString('es-CR')}</td>
           <td>${o.scheduled_pickup_date ? new Date(o.scheduled_pickup_date + 'T00:00:00').toLocaleDateString('es-CR') : '—'}</td>
@@ -194,18 +196,21 @@ async function loadRecentOrders() {
           <td>${o.final_weight_kg || o.estimated_weight_kg || '?'} kg</td>
           <td>${o.price_colones ? formatColones(o.price_colones) : (o.estimated_price_colones ? '~' + formatColones(o.estimated_price_colones) : '—')}</td>
           <td>
-            <select class="small-select" id="reassign-${o.id}">
-              <option value="">${o.provider_id ? 'Reasignar...' : 'Sin asignar'}</option>
-              ${providerOptions}
-            </select>
-            <button class="small-btn btn-approve" onclick="reassignOrder('${o.id}')">OK</button>
+            ${isFinal ? '—' : `
+              <select class="small-select" id="reassign-${o.id}">
+                <option value="">${o.provider_id ? 'Reasignar...' : 'Sin asignar'}</option>
+                ${providerOptions}
+              </select>
+              <button class="small-btn btn-approve" onclick="reassignOrder('${o.id}')">OK</button>
+            `}
           </td>
           <td>
-            ${o.status !== 'delivered' && o.status !== 'cancelled' ?
+            ${!isFinal ?
               `<button class="small-btn btn-cancel" onclick="adminCancelOrder('${o.id}')">Cancelar</button>` : '—'}
           </td>
         </tr>
-      `).join('')}
+      `;
+      }).join('')}
     </table>
   `;
 }
