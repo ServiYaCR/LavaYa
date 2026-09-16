@@ -161,7 +161,7 @@ async function loadRecentOrders() {
   const section = document.getElementById('section-orders');
   const { data: orders, error } = await db
     .from('orders')
-    .select('id, status, estimated_weight_kg, final_weight_kg, price_colones, estimated_price_colones, provider_id, created_at')
+    .select('id, status, estimated_weight_kg, final_weight_kg, price_colones, estimated_price_colones, provider_id, scheduled_pickup_date, created_at')
     .order('created_at', { ascending: false })
     .limit(50);
 
@@ -185,10 +185,11 @@ async function loadRecentOrders() {
   section.innerHTML = `
     <h2>Pedidos recientes (${orders.length})</h2>
     <table>
-      <tr><th>Fecha</th><th>Estado</th><th>Peso</th><th>Monto</th><th>Lavandero/a</th><th>Acción</th></tr>
+      <tr><th>Creado</th><th>Programado</th><th>Estado</th><th>Peso</th><th>Monto</th><th>Lavandero/a</th><th>Acción</th></tr>
       ${orders.map(o => `
         <tr>
           <td>${new Date(o.created_at).toLocaleDateString('es-CR')}</td>
+          <td>${o.scheduled_pickup_date ? new Date(o.scheduled_pickup_date + 'T00:00:00').toLocaleDateString('es-CR') : '—'}</td>
           <td>${ORDER_STATUS_LABELS[o.status] || o.status}</td>
           <td>${o.final_weight_kg || o.estimated_weight_kg || '?'} kg</td>
           <td>${o.price_colones ? formatColones(o.price_colones) : (o.estimated_price_colones ? '~' + formatColones(o.estimated_price_colones) : '—')}</td>
