@@ -17,7 +17,7 @@ async function checkAdminAccess() {
 
   if (!profile || !profile.is_admin) {
     document.getElementById('admin-content').innerHTML =
-      `<div class="denied">No tienes acceso a esta página.<br><span style="font-size:0.8rem;">Conectado como: ${user.email} (is_admin: ${profile ? profile.is_admin : 'perfil no encontrado'})</span></div>`;
+      `<div class="denied">No tienes acceso a esta página.<br><span style="font-size:0.8rem;">Conectado como: ${user.email}<br>User ID: ${user.id}<br>(is_admin: ${profile ? profile.is_admin : 'perfil no encontrado'})</span></div>`;
     return false;
   }
 
