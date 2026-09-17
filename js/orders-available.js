@@ -78,6 +78,13 @@ async function loadAvailableOrders() {
 }
 
 async function acceptOrder(orderId) {
+  try {
+    await requireLiveGPS();
+  } catch (gpsError) {
+    alert(gpsError.message);
+    return;
+  }
+
   const { data: { user } } = await db.auth.getUser();
 
   const { error } = await db

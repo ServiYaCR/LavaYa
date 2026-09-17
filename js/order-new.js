@@ -47,6 +47,14 @@ document.getElementById('order-form').addEventListener('submit', async (e) => {
     return;
   }
 
+  try {
+    await requireLiveGPS();
+  } catch (gpsError) {
+    errorText.textContent = gpsError.message;
+    errorText.style.display = 'block';
+    return;
+  }
+
   const weightKg = parseFloat(document.getElementById('estimated_weight').value);
   const express = document.getElementById('express').value === 'true';
   const pickupWindow = document.getElementById('pickup_window').value;
