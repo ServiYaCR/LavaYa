@@ -71,11 +71,6 @@ function renderOrder(order, customerProfile) {
     early: '5:00 a. m. – 8:00 a. m.',
     night: '7:00 p. m. – 9:00 p. m.'
   };
-  const pickupWindowStartText = {
-    normal: '8:00 a. m.',
-    early: '5:00 a. m.',
-    night: '7:00 p. m.'
-  };
 
   const pickupTimingNoteHtml = (order.status === 'awaiting_pickup' && customerProfile) ? `
     <div class="card" style="margin: 16px 0 0; background: var(--color-accent); border:none;">
@@ -86,7 +81,7 @@ function renderOrder(order, customerProfile) {
   const addressLockedHtml = (order.status === 'awaiting_pickup' && !customerProfile) ? `
     <div class="card" style="margin: 16px 0; background: var(--color-highlight-soft); border:none;">
       <p class="section-label" style="margin-top:0;">🔒 Dirección de recogida</p>
-      <p class="hint">Por seguridad del Cliente, la dirección se mostrará a partir de las ${pickupWindowStartText[order.pickup_window] || 'la hora acordada'}. Vuelve a esta página cuando llegue esa hora.</p>
+      <p class="hint">Por seguridad del Cliente, la dirección solo está disponible dentro del horario contratado: ${pickupWindowTimes[order.pickup_window] || 'horario acordado'}. Si ya pasó ese horario hoy, contacta a soporte.</p>
     </div>
   ` : '';
 
@@ -99,6 +94,8 @@ function renderOrder(order, customerProfile) {
       ${customerProfile.latitude ? `<a href="https://www.google.com/maps?q=${customerProfile.latitude},${customerProfile.longitude}" target="_blank" class="btn btn-outline" style="margin-top:8px;">Abrir en Google Maps</a>` : ''}
     </div>
   ` : '';
+
+  const addressLocked = order.status === 'awaiting_pickup' && !customerProfile;
 
   card.innerHTML = `
     <h1 class="title">Pedido</h1>
@@ -115,7 +112,8 @@ function renderOrder(order, customerProfile) {
 
     ${weightInputHtml}
 
-    ${!isFinalStep && actionLabel ? `<button class="btn btn-primary" id="advance-btn">${actionLabel}</button>` : ''}
+    ${!isFinalStep && actionLabel && !addressLocked ? `<button class="btn btn-primary" id="advance-btn">${actionLabel}</button>` : ''}
+    ${addressLocked ? `<p class="hint">No puedes marcar este pedido como recogido hasta que la dirección esté disponible.</p>` : ''}
     ${isFinalStep ? `<p class="hint">Este pedido ya está finalizado. Por privacidad, la dirección del cliente ya no está disponible.</p>` : ''}
     <p class="error-text" id="error-text"></p>
   `;
