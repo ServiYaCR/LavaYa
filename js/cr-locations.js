@@ -11,16 +11,35 @@ const CR_LOCATIONS = {
   "Limón": ["Limón","Pococí","Siquirres","Talamanca","Matina","Guácimo"]
 };
 
+// ⚠ Modo piloto: ServiYa solo opera en Rohrmoser/Sabana (cantón San José,
+// provincia San José) por ahora. En lugar de mostrar los 7 provincias y
+// 82 cantones completos (que solo confunden, ya que el pin GPS igual
+// bloquea el registro fuera de zona), limitamos el menú desplegable a la
+// única opción real disponible. Cuando ServiYa se expanda a otras zonas,
+// cambiar PILOT_MODE a false para volver a usar la lista completa de arriba.
+const PILOT_MODE = true;
+const PILOT_LOCATIONS = { "San José": ["San José"] };
+
 function populateProvinceCantonSelects(provinceSelectId, cantonSelectId) {
   const provinceSelect = document.getElementById(provinceSelectId);
   const cantonSelect = document.getElementById(cantonSelectId);
+  const locations = PILOT_MODE ? PILOT_LOCATIONS : CR_LOCATIONS;
 
   provinceSelect.innerHTML = '<option value="">Selecciona una provincia</option>' +
-    Object.keys(CR_LOCATIONS).map(p => `<option value="${p}">${p}</option>`).join('');
+    Object.keys(locations).map(p => `<option value="${p}">${p}</option>`).join('');
 
   provinceSelect.addEventListener('change', () => {
-    const cantones = CR_LOCATIONS[provinceSelect.value] || [];
+    const cantones = locations[provinceSelect.value] || [];
     cantonSelect.innerHTML = '<option value="">Selecciona un cantón</option>' +
       cantones.map(c => `<option value="${c}">${c}</option>`).join('');
   });
+
+  // Modo piloto: con una sola opción disponible, la seleccionamos
+  // automáticamente para ahorrarle un clic al usuario.
+  if (PILOT_MODE) {
+    const onlyProvince = Object.keys(locations)[0];
+    provinceSelect.value = onlyProvince;
+    provinceSelect.dispatchEvent(new Event('change'));
+    cantonSelect.value = locations[onlyProvince][0];
+  }
 }
