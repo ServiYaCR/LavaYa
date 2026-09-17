@@ -45,7 +45,11 @@ async function loadAvailableOrders() {
     return;
   }
 
-  const windowLabels = { normal: 'Horario normal', early: 'Madrugada', night: 'Noche' };
+  const windowLabels = {
+    normal: 'Horario normal (8:00 a.m. – 7:00 p.m.)',
+    early: 'Madrugada (5:00 a.m. – 8:00 a.m.)',
+    night: 'Noche (7:00 p.m. – 9:00 p.m.)'
+  };
 
   list.innerHTML = orders.map(o => {
     const price = o.estimated_price_colones || calculateEstimatedPrice({

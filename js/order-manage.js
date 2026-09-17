@@ -66,6 +66,19 @@ function renderOrder(order, customerProfile) {
     otro: 'Otro'
   };
 
+  const pickupWindowTimes = {
+    normal: '8:00 a. m. – 7:00 p. m.',
+    early: '5:00 a. m. – 8:00 a. m.',
+    night: '7:00 p. m. – 9:00 p. m.'
+  };
+
+  const pickupTimingNoteHtml = (order.status === 'awaiting_pickup') ? `
+    <div class="card" style="margin: 16px 0 0; background: var(--color-accent); border:none;">
+      <p style="margin:0; color:#fff; font-weight:600;">⏰ Recoger dentro de: ${pickupWindowTimes[order.pickup_window] || 'horario acordado'}</p>
+      <p style="margin:4px 0 0; color:#fff; font-size:0.85rem;">Aunque ya veas la dirección, preséntate a recoger dentro de este horario, no antes ni después, por respeto al Cliente.</p>
+    </div>
+  ` : '';
+
   const pickupAddressHtml = customerProfile ? `
     <div class="card" style="margin: 16px 0; background: var(--color-highlight-soft); border:none;">
       <p class="section-label" style="margin-top:0;">Dirección de recogida</p>
@@ -82,6 +95,8 @@ function renderOrder(order, customerProfile) {
     <p class="hint">${order.estimated_weight_kg || '?'} kg estimado · ${order.express ? 'Express' : 'Estándar'} · ${windowLabels[order.pickup_window] || ''}</p>
     ${order.special_instructions ? `<p class="hint">Instrucciones: "${order.special_instructions}"</p>` : ''}
     ${order.final_weight_kg ? `<p class="hint">Peso confirmado: ${order.final_weight_kg} kg · Monto final: ${formatColones(order.price_colones)}</p>` : ''}
+
+    ${pickupTimingNoteHtml}
 
     ${pickupAddressHtml}
 
