@@ -38,6 +38,20 @@
         <p class="section-label">Cobros</p>
         <label for="sinpe_phone">Número para recibir pagos por SINPE Móvil</label>
         <input type="tel" id="sinpe_phone" required>
+        <p class="hint">Usamos este número para contactarte sobre tus pagos.</p>
+
+        <label for="bank_name">Banco</label>
+        <input type="text" id="bank_name" required placeholder="Ej. BAC, BCR, Banco Nacional">
+
+        <label for="bank_iban">Número de cuenta IBAN</label>
+        <input type="text" id="bank_iban" required placeholder="CR00000000000000000000">
+        <p class="hint">Tus pagos se depositan automáticamente en esta cuenta.</p>
+
+        <label for="bank_currency">Moneda de la cuenta</label>
+        <select id="bank_currency" required>
+          <option value="CRC">Colones (CRC)</option>
+          <option value="USD">Dólares (USD)</option>
+        </select>
 
         <p class="section-label">Zona de trabajo</p>
         <div class="checkbox-row">
