@@ -73,6 +73,9 @@ async function loadProfile() {
   if (providerProfile) {
     document.getElementById('cedula').value = providerProfile.cedula || '';
     document.getElementById('sinpe_phone').value = providerProfile.sinpe_phone || '';
+    document.getElementById('bank_name').value = providerProfile.bank_name || '';
+    document.getElementById('bank_iban').value = providerProfile.bank_iban || '';
+    document.getElementById('bank_currency').value = providerProfile.bank_currency || 'CRC';
     document.getElementById('has_washer_dryer').checked = !!providerProfile.has_washer_dryer;
     document.getElementById('service_radius').value = providerProfile.service_radius_km || 5;
     document.getElementById('latitude').value = providerProfile.latitude || '';
@@ -134,6 +137,9 @@ document.getElementById('profile-form').addEventListener('submit', async (e) => 
   // (DB側のトリガーでも保護されているが、そもそも送信しない設計にしている)
   const { error: providerError } = await db.from('provider_profiles').update({
     sinpe_phone: document.getElementById('sinpe_phone').value.trim(),
+    bank_name: document.getElementById('bank_name').value.trim(),
+    bank_iban: document.getElementById('bank_iban').value.trim(),
+    bank_currency: document.getElementById('bank_currency').value,
     has_washer_dryer: document.getElementById('has_washer_dryer').checked,
     service_radius_km: parseFloat(document.getElementById('service_radius').value),
     latitude: lat,
