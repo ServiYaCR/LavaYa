@@ -76,8 +76,8 @@ async function uploadVerificationFile(file, userId, kind) {
   const path = `${userId}/${kind}-${Date.now()}-${file.name}`;
   const { error } = await db.storage.from('verification-docs').upload(path, file);
   if (error) throw error;
-  const { data } = db.storage.from('verification-docs').getPublicUrl(path);
-  return data.publicUrl;
+  // Private bucket compatible: store the object path, never a public URL.
+  return path;
 }
 
 document.getElementById('provider-form').addEventListener('submit', async (e) => {
@@ -123,10 +123,10 @@ document.getElementById('provider-form').addEventListener('submit', async (e) =>
     }).eq('id', user.id);
 
     // 2) 写真をSupabase Storageにアップロード
-    const facePhotoUrl = await uploadVerificationFile(
+    const facePhotoPath = await uploadVerificationFile(
       document.getElementById('face_photo').files[0], user.id, 'face'
     );
-    const cedulaPhotoUrl = await uploadVerificationFile(
+    const cedulaPhotoPath = await uploadVerificationFile(
       document.getElementById('cedula_photo').files[0], user.id, 'cedula'
     );
 
@@ -137,8 +137,8 @@ document.getElementById('provider-form').addEventListener('submit', async (e) =>
       id: user.id,
       cedula: cedulaDigits,
       cedula_verified: false,
-      face_photo_url: facePhotoUrl,
-      cedula_photo_url: cedulaPhotoUrl,
+      face_photo_path: facePhotoPath,
+      cedula_photo_path: cedulaPhotoPath,
       sinpe_phone: document.getElementById('sinpe_phone').value.trim(),
       bank_name: document.getElementById('bank_name').value.trim(),
       bank_iban: document.getElementById('bank_iban').value.trim(),
