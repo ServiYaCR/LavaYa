@@ -1,3 +1,5 @@
+> **Security-hardened candidate (2026-10-07).** This source tree is based on the archived Web application build and still contains historical product/pricing assumptions. It is not the current ServiYa strategic business specification. For a new deployment, use a **Private** `verification-docs` bucket and apply migrations through 021.
+
 # ServiYa — セットアップ手順(コードは書かなくてOKです)
 
 Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 まで完成しています。
@@ -20,11 +22,13 @@ Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 ま
 4. このプロジェクト内の `supabase/schema.sql` の中身を全部コピーして貼り付け、「Run」を押す
    → これでデータベースの表(profiles, orders など)が全部できます(これが唯一の初回セットアップ用ファイルです)
 
-## ステップ2: 画像アップロード用のStorageバケットを作る
+## ステップ2: 本人確認画像用のPrivate Storageバケットを作る
 
 1. 左メニューの **Storage** → 「New bucket」
 2. 名前: `verification-docs`
-3. 「Public bucket」をONにする(MVPの簡易設定です。本番前にアクセス制御の見直しを推奨します)
+3. **Public bucketはOFFのまま**にする。本人確認画像は機密データなのでPrivate bucketとして運用する。
+4. `supabase/migration_004_storage_policy.sql` とHardening migrations 018〜021を適用し、アップロードはユーザー自身のUUIDフォルダに限定する。
+5. 閲覧が必要な場合はauthenticated downloadまたは短時間のsigned URLを使う。`getPublicUrl()`は使わない。
 
 ## ステップ3: Google Loginを有効化する(任意)
 
@@ -121,3 +125,6 @@ Phase 1: サインアップ〜役割分岐〜顧客/プロバイダー登録 ま
 - ネイティブアプリ化(Capacitorで今のコードをラップする想定)
 
 準備ができたら、Phase 2(注文・マッチング画面)から着手しましょう。
+
+
+Security note: the hardened build stores verification object paths in `face_photo_path` / `cedula_photo_path`; legacy public URL fields remain only for transitional compatibility until the bucket is made Private.
