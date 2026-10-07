@@ -1,0 +1,6 @@
+.git/
+.github/
+supabase/
+*.md
+wrangler.jsonc
+.assetsignore
